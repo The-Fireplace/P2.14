@@ -18,13 +18,13 @@
 
 ![Main Menu](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png)
 
-<img src="https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png" alt="Main Menu" width="480"/>
-
-![In game]()
+![In game](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/sketch%20play.png)
 
 - Gesture control to operate the ship.
 
 - Multi-touch for steering and throttle.
+
+- Keeping the color scheme the same with black backgrounds and the ships colors the same as the dashboard.
 
 ### Curent Status
 
