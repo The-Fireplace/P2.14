@@ -24,11 +24,15 @@
 
 - Multi-touch for steering and throttle.
 
-- Keeping the color scheme the same with black backgrounds and the ships colors the same as the dashboard.
+- Consistent stylization of color schemes.
+
+- High contrast objects to direct attention.
+
+- Similarities with the ship and ship's dashboard to associate the two.
 
 ### Curent Status
 
-Some of the artwork is done and plans have been laid out.
+Some of the artwork is done and concepts have been laid out in order to progress.
 
 ### The Future Plan
 
