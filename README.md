@@ -6,7 +6,7 @@
 
 ### Team member and duties
 
-![Group Photo](https://raw.githubusercontent.com/The-Fireplace/Project1-3366/master/resources/group_photo.png)
+![Group Photo](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/group_photo.png)
 
 - Rick Trevino - Sketch Designer
 
@@ -16,7 +16,11 @@
 
 ### Sketch UI and Main Functions
 
-- Geture control to operate the ship.
+![Main Menu](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png)
+
+![In game]()
+
+- Gesture control to operate the ship.
 
 - Multi-touch for steering and throttle.
 
