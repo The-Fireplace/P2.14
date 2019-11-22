@@ -16,7 +16,9 @@
 
 ### Sketch UI and Main Functions
 
-![Main Menu](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png =480x)
+![Main Menu](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png | width=480x)
+
+<img src="https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/menu%20sketch.png" alt="Main Menu" width="480"/>
 
 ![In game]()
 
