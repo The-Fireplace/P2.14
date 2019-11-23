@@ -47,6 +47,13 @@ class SceneMainMenu extends Phaser.Scene {
             const bg = new ScrollingBackground(this, key, i * 10);
             this.backgrounds.push(bg);
         }
+
+        this.input.on('pointerdown', function(pointer){
+            //var touchX = pointer.x;
+            //var touchY = pointer.y;
+            //TODO Not on options click
+            game.scene.start("ScenePlay");
+        });
     }
 
     update() {
