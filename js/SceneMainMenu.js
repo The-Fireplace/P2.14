@@ -8,6 +8,7 @@ class SceneMainMenu extends Phaser.Scene {
         this.load.image("sprBtnPlay", "resources/play_button.png");
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
         this.load.image("sprShip", "resources/SpaceShipWFire.png");
+        this.load.image("sprGear", "resources/gear.png");
     }
 
     create() {
@@ -17,18 +18,27 @@ class SceneMainMenu extends Phaser.Scene {
             this.game.config.height * 0.75,
             "sprBtnPlay"
         );
+        this.btnPlay.scale = 1.5;
 
         this.btnShip = this.add.sprite(
             this.game.config.width * 0.5,
             this.game.config.height * 0.6,
             "sprShip"
         );
+        this.btnShip.scale = 0.5;
 
         this.btnLogo = this.add.sprite(
             this.game.config.width * 0.5,
             this.game.config.height * 0.3,
             "sprLogo"
         );
+
+        this.btnOptions = this.add.sprite(
+            this.game.config.width - 32,
+            32,
+            "sprGear"
+        );
+        this.btnOptions.scale = 2.0;
 
         this.backgrounds = [];
         for (let i = 0; i < 5; i++) {
