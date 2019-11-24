@@ -52,7 +52,7 @@ class ScenePlay extends Phaser.Scene {
 
         //Enemy spawning timer
         this.time.addEvent({
-            delay: 100,
+            delay: 2000,
             callback: function() {
                 const enemy = new Asteroid(
                     this,
@@ -64,6 +64,24 @@ class ScenePlay extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
+
+        this.scale.on('resize', this.resize, this);
+        let gameWidth = this.cameras.main.width;
+        let gameHeight = this.cameras.main.height;
+        this.positionControls(gameWidth, gameHeight);
+    }
+
+    positionControls(width, height) {
+        localScaleManager.scaleSprite(this.player, width/2, height, 0, 1, true);
+        this.player.setPosition(width / 2, height * 0.825);
+    }
+
+    resize(gameSize, baseSize, displaySize, resolution) {
+        let width = gameSize.width;
+        let height = gameSize.height;
+
+        this.cameras.resize(width, height);
+        this.positionControls(width, height);
     }
 
     activateForceField() {

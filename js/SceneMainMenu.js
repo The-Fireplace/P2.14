@@ -26,7 +26,7 @@ class SceneMainMenu extends Phaser.Scene {
         music.play('loop', {
             delay: 0
         });
-        console.log('game: ', game);
+        // console.log('game: ', game);
         //this.scene.start("ScenePlay");
         this.btnPlay = this.add.sprite(
             this.game.scale.width * 0.5,
