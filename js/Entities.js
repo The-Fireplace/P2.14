@@ -97,6 +97,15 @@ class Asteroid extends Entity
     }
 }
 
+class ForceField extends Entity
+{
+    constructor(scene, x, y)
+    {
+        super(scene, x, y, "sprForceField", "ForceField");
+        this.setTexture("sprForceField");
+    }
+}
+
 class ScrollingBackground
 {
     constructor(scene, key, velocityY)

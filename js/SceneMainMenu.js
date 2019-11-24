@@ -12,11 +12,24 @@ class SceneMainMenu extends Phaser.Scene
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
         this.load.image("sprShip", "resources/SpaceShipWFire.png");
         this.load.image("sprGear", "resources/gear.png");
+        this.load.audio('music', 'resources/POL-galactic-chase-short.wav');
     }
 
     create()
     {
-        //this.scene.start("ScenePlay");
+        const music = this.sound.add('music');
+        const loopMarker = {
+            name: 'loop',
+            start: 0,
+            duration: 22.588,
+            config: {
+                loop: true
+            }
+        };
+        music.addMarker(loopMarker);
+        music.play('loop', {
+            delay: 0
+        });
         this.btnPlay = this.add.sprite(
             this.game.config.width * 0.5,
             this.game.config.height * 0.75,
