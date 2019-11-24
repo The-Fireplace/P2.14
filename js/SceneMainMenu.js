@@ -4,7 +4,7 @@ class SceneMainMenu extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("sprBg", "resources/background.png");
+        this.load.image("sprBg", "resources/background2.png");
         this.load.image("sprBtnPlay", "resources/play_button.png");
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
         this.load.image("sprShip", "resources/SpaceShipWFire.png");
@@ -54,7 +54,7 @@ class SceneMainMenu extends Phaser.Scene {
         this.btnOptions.scale = 2.0;
 
         this.backgrounds = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
             const keys = ["sprBg"];
             const key = keys[Phaser.Math.Between(0, keys.length - 1)];
             const bg = new ScrollingBackground(this, key, i * 10);

@@ -4,19 +4,19 @@ class ScenePlay extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("sprBg", "resources/background.png");
+        this.load.image("sprBg", "resources/background2.png");
         this.load.image("sprCockpit", "resources/Cockpit.png");
-        /*this.load.spritesheet("sprExplosion", "resoures/explosion.png", {
-            frameWidth: 32,
-            frameHeight: 32
-        });*/
+        this.load.spritesheet("sprExplosion", "resoures/Explosion.png", {
+            frameWidth: 100,
+            frameHeight: 100
+        });
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
     }
 
     create() {
         this.backgrounds = [];
-        for (let i = 0; i < 5; i++) { // create five scrolling backgrounds
+        for (let i = 0; i < 3; i++) {
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
