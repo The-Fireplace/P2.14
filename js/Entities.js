@@ -1,5 +1,7 @@
-class Entity extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, key, type) {
+class Entity extends Phaser.GameObjects.Sprite
+{
+    constructor(scene, x, y, key, type)
+    {
         super(scene, x, y, key);
         this.scene = scene;
         this.scene.add.existing(this);
@@ -8,8 +10,10 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.setData("isDead", false);
     }
 
-    explode(canDestroy) {
-        if (!this.getData("isDead")) {
+    explode(canDestroy)
+    {
+        if (!this.getData("isDead"))
+        {
             // Set the texture to the explosion image, then play the animation
             this.setTexture("sprExplosion");  // this refers to the same animation key we used when we added this.anims.create previously
             this.play("sprExplosion"); // play the animation
@@ -20,12 +24,15 @@ class Entity extends Phaser.GameObjects.Sprite {
             this.setAngle(0);
             this.body.setVelocity(0, 0);
 
-            this.on('animationcomplete', function() {
+            this.on('animationcomplete', function ()
+            {
 
-                if (canDestroy) {
+                if (canDestroy)
+                {
                     this.destroy();
                 }
-                else {
+                else
+                {
                     this.setVisible(false);
                 }
 
@@ -36,34 +43,41 @@ class Entity extends Phaser.GameObjects.Sprite {
     }
 }
 
-class Player extends Entity {
-    constructor(scene, x, y, key, type) {
+class Player extends Entity
+{
+    constructor(scene, x, y, key, type)
+    {
         super(scene, x, y, key, "Player");
         this.setData("speed", 200);
         this.setTexture("sprPlayer");
         this.fuel = 100;
     }
 
-    moveUp() {
+    moveUp()
+    {
         this.body.velocity.y = -this.getData("speed");
     }
 
-    moveDown() {
+    moveDown()
+    {
         //TODO We won't use this, as the player will always be moving forward
         this.body.velocity.y = this.getData("speed");
     }
 
-    moveLeft() {
+    moveLeft()
+    {
         //TODO Change this to make it rotate instead
         this.body.velocity.x = -this.getData("speed");
     }
 
-    moveRight() {
+    moveRight()
+    {
         //TODO Change this to make it rotate instead
         this.body.velocity.x = this.getData("speed");
     }
 
-    update() {
+    update()
+    {
         //TODO Use the speed handle to set how fast it should be moving forward here
         this.body.setVelocity(0, 0);
 
@@ -72,17 +86,21 @@ class Player extends Entity {
     }
 }
 
-class Asteroid extends Entity {
-    constructor(scene, x, y) {
+class Asteroid extends Entity
+{
+    constructor(scene, x, y)
+    {
         super(scene, x, y, "sprAsteroid", "Asteroid");
         //TODO the next line moves the asteroid down onto the screen. We'll be moving them in from several directions, so it will have to change based on where we spawn them
-        this.body.velocity.y = Phaser.Math.Between(50, 100);
+        this.body.velocity.y = Phaser.Math.Between(100, 200);
         this.setTexture("sprAsteroid");
     }
 }
 
-class ScrollingBackground {
-    constructor(scene, key, velocityY) {
+class ScrollingBackground
+{
+    constructor(scene, key, velocityY)
+    {
         this.scene = scene;
         this.key = key;
         this.velocityY = velocityY;
@@ -91,8 +109,10 @@ class ScrollingBackground {
         this.createLayers();
     }
 
-    createLayers() {
-        for (let i = 0; i < 2; i++) {
+    createLayers()
+    {
+        for (let i = 0; i < 2; i++)
+        {
             // creating two backgrounds will allow a continuous scroll
             const layer = this.scene.add.sprite(0, 0, this.key);
             layer.y = (layer.displayHeight * i);
@@ -107,9 +127,12 @@ class ScrollingBackground {
         }
     }
 
-    update() {
-        if (this.layers.getChildren()[0].y > 0) {
-            for (let i = 0; i < this.layers.getChildren().length; i++) {
+    update()
+    {
+        if (this.layers.getChildren()[0].y > 0)
+        {
+            for (let i = 0; i < this.layers.getChildren().length; i++)
+            {
                 const layer = this.layers.getChildren()[i];
                 layer.y = (-layer.displayHeight) + (layer.displayHeight * i);
             }
