@@ -1,6 +1,7 @@
 body {
     margin: 0 auto;
     padding: 0;
-    background-color: black;
+    background-color: grey;
     max-width: 480px;
+    overflow-x: hidden;
 }

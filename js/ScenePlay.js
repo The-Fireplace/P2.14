@@ -23,8 +23,8 @@ class ScenePlay extends Phaser.Scene {
 
         this.player = new Player(
             this,
-            this.game.config.width * 0.5,
-            this.game.config.height * 0.5,
+            this.game.scale.width * 0.5,
+            this.game.scale.height * 0.5,
             "sprPlayer"
         );
 
@@ -50,7 +50,7 @@ class ScenePlay extends Phaser.Scene {
             callback: function() {
                 const enemy = new Asteroid(
                     this,
-                    Phaser.Math.Between(0, this.game.config.width),
+                    Phaser.Math.Between(0, this.game.scale.width),
                     0
                 );
                 this.enemies.add(enemy);
@@ -88,9 +88,9 @@ class ScenePlay extends Phaser.Scene {
             enemy.update();
 
             if (enemy.x < -enemy.displayWidth ||
-                enemy.x > this.game.config.width + enemy.displayWidth ||
+                enemy.x > this.game.scale.width + enemy.displayWidth ||
                 enemy.y < -enemy.displayHeight * 4 ||
-                enemy.y > this.game.config.height + enemy.displayHeight) {
+                enemy.y > this.game.scale.height + enemy.displayHeight) {
 
                 if (enemy) {
                     if (enemy.onDestroy !== undefined) {
