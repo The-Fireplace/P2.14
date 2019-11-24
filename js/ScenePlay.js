@@ -34,11 +34,17 @@ class ScenePlay extends Phaser.Scene {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+        this.ff = null;
+
         this.physics.add.overlap(this.player, this.enemies, function(player, enemy) {
             if (!player.getData("isDead") &&
                 !enemy.getData("isDead")) {
-                player.explode(false);
-                enemy.explode(true);
+                if(this.ff == null) {
+                    player.explode(false);
+                    enemy.explode(true);
+                } else {
+                    enemy.explode(true);
+                }
             }
         });
 
@@ -58,6 +64,24 @@ class ScenePlay extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
+    }
+
+    activateForceField() {
+        if(this.player.fuel > 50) {
+            //Activate forcefield
+            this.player.fuel -= 50;
+            //TODO forcefield sound effect
+            this.ff = new ForceField(this, this.player.x, this.player.y);
+            this.time.addEvent({
+                delay: 1000,
+                callback: function () {
+                    this.ff.destroy();
+                    this.ff = null;
+                },
+                callbackScope: this,
+                loop: false
+            });
+        }
     }
 
     update() {
