@@ -41,6 +41,7 @@ class Player extends Entity {
         super(scene, x, y, key, "Player");
         this.setData("speed", 200);
         this.setTexture("sprPlayer");
+        this.fuel = 100;
     }
 
     moveUp() {
