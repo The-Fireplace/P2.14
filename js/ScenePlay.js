@@ -19,7 +19,7 @@ class ScenePlay extends Phaser.Scene
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.image("forceField", "resources/ForceField");
+        this.load.image("forceField", "resources/ForceField.png");
     }
 
     create()
@@ -42,7 +42,7 @@ class ScenePlay extends Phaser.Scene
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
-
+        console.log('scale width: ', this.game.scale.width, '\theight: ', this.game.scale.height);
         this.player = new Player(
             this,
             this.game.scale.width * 0.5,
@@ -50,6 +50,8 @@ class ScenePlay extends Phaser.Scene
             "sprPlayer"
         );
         this.player.scale = 0.3;
+
+        console.log('player: ', this.player);
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -94,24 +96,24 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
-        this.scale.on('resize', this.resize, this);
-        let gameWidth = this.cameras.main.width;
-        let gameHeight = this.cameras.main.height;
-        this.positionControls(gameWidth, gameHeight);
+        // this.scale.on('resize', this.resize, this);
+        // let gameWidth = this.cameras.main.width;
+        // let gameHeight = this.cameras.main.height;
+        // this.positionControls(gameWidth, gameHeight);
     }
 
-    positionControls(width, height) {
-        localScaleManager.scaleSprite(this.player, width/2, height, 0, 1, true);
-        this.player.setPosition(width / 2, height * 0.825);
-    }
-
-    resize(gameSize, baseSize, displaySize, resolution) {
-        let width = gameSize.width;
-        let height = gameSize.height;
-
-        this.cameras.resize(width, height);
-        this.positionControls(width, height);
-    }
+    // positionControls(width, height) {
+    //     localScaleManager.scaleSprite(this.player, width/2, height, 0, 1, true);
+    //     this.player.setPosition(width / 2, height * 0.825);
+    // }
+    //
+    // resize(gameSize, baseSize, displaySize, resolution) {
+    //     let width = gameSize.width;
+    //     let height = gameSize.height;
+    //
+    //     this.cameras.resize(width, height);
+    //     this.positionControls(width, height);
+    // }
 
     activateForceField() {
         if(this.player.fuel > 50) {

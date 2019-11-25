@@ -81,8 +81,8 @@ class Player extends Entity
         //TODO Use the speed handle to set how fast it should be moving forward here
         this.body.setVelocity(0, 0);
 
-        this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.config.width);
-        this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.config.height);
+        this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.scale.width);
+        this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.scale.height);
     }
 }
 
