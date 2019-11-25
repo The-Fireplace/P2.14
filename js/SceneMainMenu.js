@@ -1,9 +1,12 @@
-class SceneMainMenu extends Phaser.Scene {
-    constructor() {
+class SceneMainMenu extends Phaser.Scene
+{
+    constructor()
+    {
         super({ key: "SceneMainMenu" });
     }
 
-    preload() {
+    preload()
+    {
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprBtnPlay", "resources/play_button.png");
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
@@ -12,7 +15,8 @@ class SceneMainMenu extends Phaser.Scene {
         this.load.audio('music', 'resources/POL-galactic-chase-short.wav');
     }
 
-    create() {
+    create()
+    {
         const music = this.sound.add('music');
         const loopMarker = {
             name: 'loop',
@@ -63,22 +67,23 @@ class SceneMainMenu extends Phaser.Scene {
             this.backgrounds.push(bg);
         }
 
-        this.input.on('pointerdown', function(pointer){
+        this.input.on('pointerdown', function (pointer)
+        {
             //var touchX = pointer.x;
             //var touchY = pointer.y;
             //TODO Not on options click
-            game.scene.start("ScenePlay");
-        });
-
+            this.scene.start("ScenePlay");
+        }, this);
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
         let gameHeight = this.cameras.main.height;
         this.positionControls(gameWidth, gameHeight);
     }
 
-    update() {
-
-        for (let i = 0; i < this.backgrounds.length; i++) {
+    update()
+    {
+        for (let i = 0; i < this.backgrounds.length; i++)
+        {
             this.backgrounds[i].update();
         }
     }
