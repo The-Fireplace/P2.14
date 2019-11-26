@@ -69,8 +69,6 @@ class SceneMainMenu extends Phaser.Scene
 
         this.input.on('pointerdown', function (pointer)
         {
-            //var touchX = pointer.x;
-            //var touchY = pointer.y;
             //TODO Not on options click
             this.scene.start("ScenePlay");
         }, this);
