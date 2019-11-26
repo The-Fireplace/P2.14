@@ -9,6 +9,7 @@ class ScenePlay extends Phaser.Scene
     {
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprCockpit", "resources/Cockpit.png");
+        this.load.image("sprEmptyCockpit", "resources/EmptyCockpit.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
@@ -20,6 +21,21 @@ class ScenePlay extends Phaser.Scene
             frameHeight: 32
         });
         this.load.image("forceField", "resources/ForceField.png");
+        this.load.image("steeringWheel", "resources/SteeringWheel.png");
+        this.load.image("shieldBtnNotUsable", "resources/ShieldBtnNotUsable.png");
+        this.load.image("shieldBtnUsable", "resources/ShieldBtnUsable");
+        this.load.image("shieldBtnInUse", "resources/ShieldBtnInUse");
+        this.load.image("fuel0", "resources/Fuel0.png");
+        this.load.image("fuel1", "resources/Fuel1.png");
+        this.load.image("fuel2", "resources/Fuel2.png");
+        this.load.image("fuel3", "resources/Fuel3.png");
+        this.load.image("fuel4", "resources/Fuel4.png");
+        this.load.image("fuel5", "resources/Fuel5.png");
+        this.load.image("fuel6", "resources/Fuel6.png");
+        this.load.image("fuel7", "resources/Fuel7.png");
+        this.load.image("fuel8", "resources/Fuel8.png");
+        this.load.image("fuel9", "resources/Fuel9.png");
+        this.load.image("speedHandle", "resources/SpeedHandle.png");
     }
 
     create()
@@ -38,7 +54,8 @@ class ScenePlay extends Phaser.Scene
         });
 
         this.backgrounds = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++)
+        {
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
@@ -115,8 +132,10 @@ class ScenePlay extends Phaser.Scene
     //     this.positionControls(width, height);
     // }
 
-    activateForceField() {
-        if(this.player.fuel > 50) {
+    activateForceField()
+    {
+        if (this.player.fuel > 50)
+        {
             //Activate forcefield
             this.player.fuel -= 50;
             //TODO forcefield sound effect
