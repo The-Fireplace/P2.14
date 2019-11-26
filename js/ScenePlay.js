@@ -8,7 +8,7 @@ class ScenePlay extends Phaser.Scene
     preload()
     {
         this.load.image("sprBg", "resources/background.png");
-        this.load.image("sprCockpit", "resources/Cockpit.png");
+        this.load.image("sprCockpit", "resources/FullCockpit.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
@@ -42,7 +42,21 @@ class ScenePlay extends Phaser.Scene
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
-        console.log('scale width: ', this.game.scale.width, '\theight: ', this.game.scale.height);
+
+        this.btnOptions = this.add.sprite(
+            this.game.scale.width - 32,
+            32,
+            "sprGear"
+        );
+        this.btnOptions.scale = 1;
+
+        this.cockPit = this.add.sprite(
+            this.game.scale.width * .5,
+            this.game.scale.height * .5,
+            "sprCockpit"
+        );
+        this.cockPit.scale = 1;
+
         this.player = new Player(
             this,
             this.game.scale.width * 0.5,
@@ -50,8 +64,6 @@ class ScenePlay extends Phaser.Scene
             "sprPlayer"
         );
         this.player.scale = 0.3;
-
-        console.log('player: ', this.player);
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -96,24 +108,34 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
-        // this.scale.on('resize', this.resize, this);
-        // let gameWidth = this.cameras.main.width;
-        // let gameHeight = this.cameras.main.height;
-        // this.positionControls(gameWidth, gameHeight);
+        this.scale.on('resize', this.resize, this);
+        let gameWidth = this.cameras.main.width;
+        let gameHeight = this.cameras.main.height;
+        this.positionControls(gameWidth, gameHeight);
     }
 
-    // positionControls(width, height) {
-    //     localScaleManager.scaleSprite(this.player, width/2, height, 0, 1, true);
-    //     this.player.setPosition(width / 2, height * 0.825);
-    // }
-    //
-    // resize(gameSize, baseSize, displaySize, resolution) {
-    //     let width = gameSize.width;
-    //     let height = gameSize.height;
-    //
-    //     this.cameras.resize(width, height);
-    //     this.positionControls(width, height);
-    // }
+    positionControls(width, height) {
+        localScaleManager.scaleSprite(this.player, width/7, height, 0, 1, true);
+        this.player.setPosition(width / 2, height * 0.6);
+
+        localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
+        this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
+
+        console.log('options: ', this.btnOptions);
+
+        localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
+        this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight/2);
+
+        console.log('cockpit: ', this.cockPit);
+    }
+
+    resize(gameSize, baseSize, displaySize, resolution) {
+        let width = gameSize.width;
+        let height = gameSize.height;
+
+        this.cameras.resize(width, height);
+        this.positionControls(width, height);
+    }
 
     activateForceField() {
         if(this.player.fuel > 50) {
