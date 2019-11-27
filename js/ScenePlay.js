@@ -14,7 +14,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprSteering", "resources/SteeringWheel.png");
         this.load.image("sprThrottle", "resources/SpeedHandle.png");
         this.load.image("sprShieldUse", "resources/ShieldBtnUsable.png");
-        this.load.image("sprFuel9", "resources/Fuel9.png")
+        this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
