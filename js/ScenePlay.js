@@ -1,3 +1,5 @@
+let cockpitHeight = 0;
+
 class ScenePlay extends Phaser.Scene
 {
     constructor()
@@ -8,13 +10,16 @@ class ScenePlay extends Phaser.Scene
     preload()
     {
         this.load.image("sprBg", "resources/background.png");
-        this.load.image("sprCockpit", "resources/Cockpit.png");
-        this.load.image("sprEmptyCockpit", "resources/EmptyCockpit.png");
+        this.load.image("sprCockpit", "resources/EmptyCockpit.png");
+        this.load.image("sprSteering", "resources/SteeringWheel.png");
+        this.load.image("sprThrottle", "resources/SpeedHandle.png");
+        this.load.image("sprShieldUse", "resources/ShieldBtnUsable.png");
+        this.load.image("sprFuel9", "resources/Fuel9.png")
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
-            frameWidth: 32,
-            frameHeight: 32
+            frameWidth: 100,
+            frameHeight: 100
         });
         this.load.spritesheet("forceFieldGrowingAnim", "resources/ForceFieldGrow.png", {
             frameWidth: 32,
@@ -36,6 +41,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("fuel8", "resources/Fuel8.png");
         this.load.image("fuel9", "resources/Fuel9.png");
         this.load.image("speedHandle", "resources/SpeedHandle.png");
+        this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
     }
 
     create()
@@ -52,6 +58,7 @@ class ScenePlay extends Phaser.Scene
             frameRate: 10,
             repeat: -1
         });
+        this.sndExplosion = this.sound.add('explosion');
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++)
@@ -59,16 +66,64 @@ class ScenePlay extends Phaser.Scene
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
-        console.log('scale width: ', this.game.scale.width, '\theight: ', this.game.scale.height);
+
+        this.btnOptions = this.add.sprite(
+            this.game.scale.width - 32,
+            32,
+            "sprGear"
+        );
+        this.btnOptions.scale = 1;
+        this.btnOptions.setDepth(2);
+
+        this.throttle = this.add.sprite(
+            0,
+            0,
+            "sprThrottle"
+        );
+        this.throttle.scale = .5;
+        this.throttle.setDepth(3);
+
+        this.steering = this.add.sprite(
+            0,
+            0,
+            "sprSteering"
+        );
+        this.steering.scale = .5;
+        this.steering.setDepth(3);
+
+        this.fuel9 = this.add.sprite(
+            0,
+            0,
+            "sprFuel9"
+        );
+        this.fuel9.scale = .5;
+        this.fuel9.setDepth(3);
+
+        this.shieldUse = this.add.sprite(
+            0,
+            0,
+            "sprShieldUse"
+        );
+        this.shieldUse.scale = .5;
+        this.shieldUse.setDepth(3);
+
+        this.cockPit = this.add.sprite(
+            this.game.scale.width * .5,
+            this.game.scale.height * .5,
+            "sprCockpit"
+        );
+        this.cockPit.scale = 1;
+        this.cockPit.setDepth(2);
+        cockpitHeight = this.cockPit.displayHeight;
+
         this.player = new Player(
             this,
-            this.game.scale.width * 0.5,
-            this.game.scale.height * 0.5,
+            0,
+            0,
             "sprPlayer"
         );
         this.player.scale = 0.3;
-
-        console.log('player: ', this.player);
+        this.player.setDepth(1);
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -83,6 +138,8 @@ class ScenePlay extends Phaser.Scene
         var goDownZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
 
         this.ff = null;
+
+        this.enemies = this.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
@@ -99,8 +156,6 @@ class ScenePlay extends Phaser.Scene
                 }
             }
         });
-
-        this.enemies = this.add.group();
 
         //Enemy spawning timer
         this.time.addEvent({
@@ -119,24 +174,45 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
-        // this.scale.on('resize', this.resize, this);
-        // let gameWidth = this.cameras.main.width;
-        // let gameHeight = this.cameras.main.height;
-        // this.positionControls(gameWidth, gameHeight);
+        this.scale.on('resize', this.resize, this);
+        let gameWidth = this.cameras.main.width;
+        let gameHeight = this.cameras.main.height;
+        this.positionControls(gameWidth, gameHeight);
     }
 
-    // positionControls(width, height) {
-    //     localScaleManager.scaleSprite(this.player, width/2, height, 0, 1, true);
-    //     this.player.setPosition(width / 2, height * 0.825);
-    // }
-    //
-    // resize(gameSize, baseSize, displaySize, resolution) {
-    //     let width = gameSize.width;
-    //     let height = gameSize.height;
-    //
-    //     this.cameras.resize(width, height);
-    //     this.positionControls(width, height);
-    // }
+    positionControls(width, height)
+    {
+        localScaleManager.scaleSprite(this.player, width / 7, height, 0, 1, true);
+        this.player.setPosition(width / 2, height * 0.6);
+
+        localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
+        this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
+
+        localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
+        this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight / 2);
+        cockpitHeight = this.cockPit.displayHeight;
+
+        localScaleManager.scaleSprite(this.steering, width / 3.8, height, 0, 1, true);
+        this.steering.setPosition(width * .22, height + 2 - this.cockPit.displayHeight / 2);
+
+        localScaleManager.scaleSprite(this.throttle, width / 7.5, height, 0, 1, true);
+        this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight / 2);
+
+        localScaleManager.scaleSprite(this.fuel9, width / 5, height, 0, 1, true);
+        this.fuel9.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+
+        localScaleManager.scaleSprite(this.shieldUse, width / 6, height, 0, 1, true);
+        this.shieldUse.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
+    }
+
+    resize(gameSize, baseSize, displaySize, resolution)
+    {
+        let width = gameSize.width;
+        let height = gameSize.height;
+
+        this.cameras.resize(width, height);
+        this.positionControls(width, height);
+    }
 
     activateForceField()
     {
@@ -202,7 +278,7 @@ class ScenePlay extends Phaser.Scene
             if (enemy.x < -enemy.displayWidth ||
                 enemy.x > this.game.scale.width + enemy.displayWidth ||
                 enemy.y < -enemy.displayHeight * 4 ||
-                enemy.y > this.game.config.height + enemy.displayHeight)
+                enemy.y > this.game.scale.height + enemy.displayHeight)
             {
 
                 if (enemy)

@@ -90,11 +90,11 @@ class SceneMainMenu extends Phaser.Scene
         localScaleManager.scaleSprite(this.btnPlay, width/2.15, height, 0, 1, true);
         this.btnPlay.setPosition(width / 2, height * 0.825);
 
-        localScaleManager.scaleSprite(this.btnShip, width/5, height, 0, 1, true);
+        localScaleManager.scaleSprite(this.btnShip, width/7, height, 0, 1, true);
         this.btnShip.setPosition(width / 2, height * .6 );
 
         localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
-        this.btnOptions.setPosition(width - 20, 20);
+        this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
 
         localScaleManager.scaleSprite(this.btnLogo, width/1.50, height, 0, 1, true);
         this.btnLogo.setPosition(width / 2, height * 0.25);
