@@ -10,7 +10,11 @@ class ScenePlay extends Phaser.Scene
     preload()
     {
         this.load.image("sprBg", "resources/background.png");
-        this.load.image("sprCockpit", "resources/FullCockpit.png");
+        this.load.image("sprCockpit", "resources/EmptyCockpit.png");
+        this.load.image("sprSteering", "resources/SteeringWheel.png");
+        this.load.image("sprThrottle", "resources/SpeedHandle.png");
+        this.load.image("sprShieldUse", "resources/ShieldBtnUsable.png");
+        this.load.image("sprFuel9", "resources/Fuel9.png")
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
@@ -53,6 +57,37 @@ class ScenePlay extends Phaser.Scene
         this.btnOptions.scale = 1;
         this.btnOptions.setDepth(2);
 
+        this.throttle = this.add.sprite(
+            0,
+            0,
+            "sprThrottle"
+        );
+        this.throttle.scale = .5;
+        this.throttle.setDepth(3);
+
+        this.steering = this.add.sprite(
+            0,
+            0,
+            "sprSteering"
+        );
+        this.steering.scale = .5;
+        this.steering.setDepth(3);
+
+        this.fuel9 = this.add.sprite(
+            0,
+            0,
+            "sprFuel9"
+        );
+        this.fuel9.scale = .5;
+        this.fuel9.setDepth(3);
+
+        this.shieldUse = this.add.sprite(
+            0,
+            0,
+            "sprShieldUse"
+        );
+        this.shieldUse.scale = .5;
+        this.shieldUse.setDepth(3);
 
         this.cockPit = this.add.sprite(
             this.game.scale.width * .5,
@@ -132,7 +167,6 @@ class ScenePlay extends Phaser.Scene
     positionControls(width, height) {
         localScaleManager.scaleSprite(this.player, width/7, height, 0, 1, true);
         this.player.setPosition(width / 2, height * 0.6);
-        console.log('player scale: ', this.player);
 
         localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
         this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
@@ -140,6 +174,18 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
         this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight/2);
         cockpitHeight = this.cockPit.displayHeight;
+
+        localScaleManager.scaleSprite(this.steering, width/3.8, height, 0, 1, true);
+        this.steering.setPosition(width * .22, height + 2 - this.cockPit.displayHeight/2 );
+
+        localScaleManager.scaleSprite(this.throttle, width/7.5, height, 0, 1, true);
+        this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight/2 );
+
+        localScaleManager.scaleSprite(this.fuel9, width/5, height, 0, 1, true);
+        this.fuel9.setPosition(width * .49, height - 5 - this.cockPit.displayHeight/4 - this.cockPit.displayHeight/2);
+
+        localScaleManager.scaleSprite(this.shieldUse, width/6, height, 0, 1, true);
+        this.shieldUse.setPosition(width * .49, height - 5 - this.cockPit.displayHeight/4);
     }
 
     resize(gameSize, baseSize, displaySize, resolution) {
