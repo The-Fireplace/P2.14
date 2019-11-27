@@ -1,3 +1,5 @@
+let cockpitHeight = 0;
+
 class ScenePlay extends Phaser.Scene
 {
     constructor()
@@ -49,6 +51,8 @@ class ScenePlay extends Phaser.Scene
             "sprGear"
         );
         this.btnOptions.scale = 1;
+        this.btnOptions.setDepth(2);
+
 
         this.cockPit = this.add.sprite(
             this.game.scale.width * .5,
@@ -56,14 +60,17 @@ class ScenePlay extends Phaser.Scene
             "sprCockpit"
         );
         this.cockPit.scale = 1;
+        this.cockPit.setDepth(2);
+        cockpitHeight = this.cockPit.displayHeight;
 
         this.player = new Player(
             this,
-            this.game.scale.width * 0.5,
-            this.game.scale.height * 0.5,
+            0,
+            0,
             "sprPlayer"
         );
         this.player.scale = 0.3;
+        this.player.setDepth(1);
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -125,16 +132,14 @@ class ScenePlay extends Phaser.Scene
     positionControls(width, height) {
         localScaleManager.scaleSprite(this.player, width/7, height, 0, 1, true);
         this.player.setPosition(width / 2, height * 0.6);
+        console.log('player scale: ', this.player);
 
         localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
         this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
 
-        console.log('options: ', this.btnOptions);
-
         localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
         this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight/2);
-
-        console.log('cockpit: ', this.cockPit);
+        cockpitHeight = this.cockPit.displayHeight;
     }
 
     resize(gameSize, baseSize, displaySize, resolution) {
@@ -202,7 +207,7 @@ class ScenePlay extends Phaser.Scene
             if (enemy.x < -enemy.displayWidth ||
                 enemy.x > this.game.scale.width + enemy.displayWidth ||
                 enemy.y < -enemy.displayHeight * 4 ||
-                enemy.y > this.game.config.height + enemy.displayHeight)
+                enemy.y > this.game.scale.height + enemy.displayHeight)
             {
 
                 if (enemy)
