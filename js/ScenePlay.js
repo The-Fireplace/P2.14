@@ -11,10 +11,6 @@ class ScenePlay extends Phaser.Scene
     {
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprCockpit", "resources/EmptyCockpit.png");
-        this.load.image("sprSteering", "resources/SteeringWheel.png");
-        this.load.image("sprThrottle", "resources/SpeedHandle.png");
-        this.load.image("sprShieldUse", "resources/ShieldBtnUsable.png");
-        this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
@@ -25,22 +21,22 @@ class ScenePlay extends Phaser.Scene
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.image("forceField", "resources/ForceField.png");
-        this.load.image("steeringWheel", "resources/SteeringWheel.png");
-        this.load.image("shieldBtnNotUsable", "resources/ShieldBtnNotUsable.png");
-        this.load.image("shieldBtnUsable", "resources/ShieldBtnUsable");
-        this.load.image("shieldBtnInUse", "resources/ShieldBtnInUse");
-        this.load.image("fuel0", "resources/Fuel0.png");
-        this.load.image("fuel1", "resources/Fuel1.png");
-        this.load.image("fuel2", "resources/Fuel2.png");
-        this.load.image("fuel3", "resources/Fuel3.png");
-        this.load.image("fuel4", "resources/Fuel4.png");
-        this.load.image("fuel5", "resources/Fuel5.png");
-        this.load.image("fuel6", "resources/Fuel6.png");
-        this.load.image("fuel7", "resources/Fuel7.png");
-        this.load.image("fuel8", "resources/Fuel8.png");
-        this.load.image("fuel9", "resources/Fuel9.png");
-        this.load.image("speedHandle", "resources/SpeedHandle.png");
+        this.load.image("sprForceField", "resources/ForceField.png");
+        this.load.image("sprSteeringWheel", "resources/SteeringWheel.png");
+        this.load.image("sprShieldBtnNotUsable", "resources/ShieldBtnNotUsable.png");
+        this.load.image("sprShieldBtnUsable", "resources/ShieldBtnUsable.png");
+        this.load.image("sprShieldBtnInUse", "resources/ShieldBtnInUse.png");
+        this.load.image("sprFuel0", "resources/Fuel0.png");
+        this.load.image("sprFuel1", "resources/Fuel1.png");
+        this.load.image("sprFuel2", "resources/Fuel2.png");
+        this.load.image("sprFuel3", "resources/Fuel3.png");
+        this.load.image("sprFuel4", "resources/Fuel4.png");
+        this.load.image("sprFuel5", "resources/Fuel5.png");
+        this.load.image("sprFuel6", "resources/Fuel6.png");
+        this.load.image("sprFuel7", "resources/Fuel7.png");
+        this.load.image("sprFuel8", "resources/Fuel8.png");
+        this.load.image("sprFuel9", "resources/Fuel9.png");
+        this.load.image("sprSpeedHandle", "resources/SpeedHandle.png");
         this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
     }
 
@@ -78,7 +74,7 @@ class ScenePlay extends Phaser.Scene
         this.throttle = this.add.sprite(
             0,
             0,
-            "sprThrottle"
+            "sprSpeedHandle"
         );
         this.throttle.scale = .5;
         this.throttle.setDepth(3);
@@ -86,7 +82,7 @@ class ScenePlay extends Phaser.Scene
         this.steering = this.add.sprite(
             0,
             0,
-            "sprSteering"
+            "sprSteeringWheel"
         );
         this.steering.scale = .5;
         this.steering.setDepth(3);
@@ -102,7 +98,7 @@ class ScenePlay extends Phaser.Scene
         this.shieldUse = this.add.sprite(
             0,
             0,
-            "sprShieldUse"
+            "sprShieldBtnUsable"
         );
         this.shieldUse.scale = .5;
         this.shieldUse.setDepth(3);
