@@ -370,6 +370,11 @@ class ScenePlay extends Phaser.Scene
             {
                 this.player.moveUp();
             }
+
+            if(this.ff != null) {
+                this.ff.x = this.player.x;
+                this.ff.y = this.player.y;
+            }
         }
 
         for (let i = 0; i < this.enemies.getChildren().length; i++)
