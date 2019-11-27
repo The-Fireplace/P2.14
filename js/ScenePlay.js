@@ -14,7 +14,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprSteering", "resources/SteeringWheel.png");
         this.load.image("sprThrottle", "resources/SpeedHandle.png");
         this.load.image("sprShieldUse", "resources/ShieldBtnUsable.png");
-        this.load.image("sprFuel9", "resources/Fuel9.png");
+        this.load.image("sprFuel9", "resources/Fuel9.png")
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
@@ -71,7 +71,7 @@ class ScenePlay extends Phaser.Scene
             this.game.scale.width - 32,
             32,
             "sprGear"
-        );
+        ).setInteractive();
         this.btnOptions.scale = 1;
         this.btnOptions.setDepth(2);
 
@@ -79,7 +79,7 @@ class ScenePlay extends Phaser.Scene
             0,
             0,
             "sprThrottle"
-        );
+        ).setInteractive();
         this.throttle.scale = .5;
         this.throttle.setDepth(3);
 
@@ -87,7 +87,7 @@ class ScenePlay extends Phaser.Scene
             0,
             0,
             "sprSteering"
-        );
+        ).setInteractive();
         this.steering.scale = .5;
         this.steering.setDepth(3);
 
@@ -103,7 +103,7 @@ class ScenePlay extends Phaser.Scene
             0,
             0,
             "sprShieldUse"
-        );
+        ).setInteractive();
         this.shieldUse.scale = .5;
         this.shieldUse.setDepth(3);
 
@@ -129,21 +129,8 @@ class ScenePlay extends Phaser.Scene
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.keyDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-        this.keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.keyNum8 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT);
-        this.keyNum5 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE);
-        this.keyNum4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR);
-        this.keyNum6 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX);
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.pointer = this.input.activePointer;
-        var steerLeftZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
-        var steerRightZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
-        var shieldBtnZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
-        var goUpZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
-        var goDownZone = this.add.zone(0, 0, 345, 300).setOrigin(0).setInteractive();
 
         this.ff = null;
 
@@ -255,26 +242,27 @@ class ScenePlay extends Phaser.Scene
             this.player.update();
 
             //TODO This is where the player controls would go
-            if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown)
+            if (this.keyW.isDown)
             {
                 this.player.moveUp();
-            } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown)
+            } else if (this.keyS.isDown)
             {
                 this.player.moveDown();
             }
 
-            if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown)
+            if (this.keyA.isDown)
             {
                 this.player.moveLeft();
-            } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown)
+            } else if (this.keyD.isDown)
             {
                 this.player.moveRight();
             }
 
-            if (this.pointer.isDown)
+            this.shieldUse.on('pointerdown', function (pointer)
             {
-                this.player.moveUp();
-            }
+                this.scene.activateForceField();
+            })
+
         }
 
         for (let i = 0; i < this.enemies.getChildren().length; i++)
