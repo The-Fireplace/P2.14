@@ -18,14 +18,15 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
-            frameWidth: 32,
-            frameHeight: 32
+            frameWidth: 100,
+            frameHeight: 100
         });
         this.load.spritesheet("forceFieldGrowingAnim", "resources/ForceFieldGrow.png", {
             frameWidth: 32,
             frameHeight: 32
         });
         this.load.image("forceField", "resources/ForceField.png");
+        this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
     }
 
     create()
@@ -42,6 +43,7 @@ class ScenePlay extends Phaser.Scene
             frameRate: 10,
             repeat: -1
         });
+        this.sndExplosion = this.sound.add('explosion');
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++) {
@@ -123,6 +125,8 @@ class ScenePlay extends Phaser.Scene
 
         this.ff = null;
 
+        this.enemies = this.add.group();
+
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
             if (!player.getData("isDead") &&
@@ -138,8 +142,6 @@ class ScenePlay extends Phaser.Scene
                 }
             }
         });
-
-        this.enemies = this.add.group();
 
         //Enemy spawning timer
         this.time.addEvent({
