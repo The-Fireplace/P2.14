@@ -12,8 +12,8 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
-            frameWidth: 32,
-            frameHeight: 32
+            frameWidth: 100,
+            frameHeight: 100
         });
         this.load.spritesheet("forceFieldGrowingAnim", "resources/ForceFieldGrow.png", {
             frameWidth: 32,
@@ -42,7 +42,6 @@ class ScenePlay extends Phaser.Scene
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
-        console.log('scale width: ', this.game.scale.width, '\theight: ', this.game.scale.height);
         this.player = new Player(
             this,
             this.game.scale.width * 0.5,
@@ -50,8 +49,6 @@ class ScenePlay extends Phaser.Scene
             "sprPlayer"
         );
         this.player.scale = 0.3;
-
-        console.log('player: ', this.player);
 
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -69,6 +66,8 @@ class ScenePlay extends Phaser.Scene
 
         this.ff = null;
 
+        this.enemies = this.add.group();
+
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
             if (!player.getData("isDead") &&
@@ -84,8 +83,6 @@ class ScenePlay extends Phaser.Scene
                 }
             }
         });
-
-        this.enemies = this.add.group();
 
         //Enemy spawning timer
         this.time.addEvent({
