@@ -87,6 +87,87 @@ class ScenePlay extends Phaser.Scene
         this.steering.scale = .5;
         this.steering.setDepth(3);
 
+        this.fuel0 = this.add.sprite(
+            0,
+            0,
+            "sprFuel0"
+        );
+        this.fuel0.scale = .5;
+        this.fuel0.setDepth(3);
+        this.fuel0.visible = false;
+
+        this.fuel1 = this.add.sprite(
+            0,
+            0,
+            "sprFuel1"
+        );
+        this.fuel1.scale = .5;
+        this.fuel1.setDepth(3);
+        this.fuel1.visible = false;
+
+        this.fuel2 = this.add.sprite(
+            0,
+            0,
+            "sprFuel2"
+        );
+        this.fuel2.scale = .5;
+        this.fuel2.setDepth(3);
+        this.fuel2.visible = false;
+
+        this.fuel3 = this.add.sprite(
+            0,
+            0,
+            "sprFuel3"
+        );
+        this.fuel3.scale = .5;
+        this.fuel3.setDepth(3);
+        this.fuel3.visible = false;
+
+        this.fuel4 = this.add.sprite(
+            0,
+            0,
+            "sprFuel4"
+        );
+        this.fuel4.scale = .5;
+        this.fuel4.setDepth(3);
+        this.fuel4.visible = false;
+
+        this.fuel5 = this.add.sprite(
+            0,
+            0,
+            "sprFuel5"
+        );
+        this.fuel5.scale = .5;
+        this.fuel5.setDepth(3);
+        this.fuel5.visible = false;
+
+        this.fuel6 = this.add.sprite(
+            0,
+            0,
+            "sprFuel6"
+        );
+        this.fuel6.scale = .5;
+        this.fuel6.setDepth(3);
+        this.fuel6.visible = false;
+
+        this.fuel7 = this.add.sprite(
+            0,
+            0,
+            "sprFuel7"
+        );
+        this.fuel7.scale = .5;
+        this.fuel7.setDepth(3);
+        this.fuel7.visible = false;
+
+        this.fuel8 = this.add.sprite(
+            0,
+            0,
+            "sprFuel8"
+        );
+        this.fuel8.scale = .5;
+        this.fuel8.setDepth(3);
+        this.fuel8.visible = false;
+
         this.fuel9 = this.add.sprite(
             0,
             0,
@@ -95,13 +176,31 @@ class ScenePlay extends Phaser.Scene
         this.fuel9.scale = .5;
         this.fuel9.setDepth(3);
 
-        this.shieldUse = this.add.sprite(
+        this.shieldUseable = this.add.sprite(
             0,
             0,
             "sprShieldBtnUsable"
         );
-        this.shieldUse.scale = .5;
-        this.shieldUse.setDepth(3);
+        this.shieldUseable.scale = .5;
+        this.shieldUseable.setDepth(3);
+
+        this.shieldInUse = this.add.sprite(
+            0,
+            0,
+            "sprShieldBtnInUse"
+        );
+        this.shieldInUse.scale = .5;
+        this.shieldInUse.setDepth(3);
+        this.shieldInUse.visible = false;
+
+        this.shieldNotUse = this.add.sprite(
+            0,
+            0,
+            "sprShieldBtnNotUsable"
+        );
+        this.shieldNotUse.scale = .5;
+        this.shieldNotUse.setDepth(3);
+        this.shieldNotUse.visible = false;
 
         this.cockPit = this.add.sprite(
             this.game.scale.width * .5,
@@ -205,8 +304,8 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.fuel9, width / 5, height, 0, 1, true);
         this.fuel9.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
 
-        localScaleManager.scaleSprite(this.shieldUse, width / 6, height, 0, 1, true);
-        this.shieldUse.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
+        localScaleManager.scaleSprite(this.shieldUseable, width / 6, height, 0, 1, true);
+        this.shieldUseable.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
     }
 
     resize(gameSize, baseSize, displaySize, resolution)
@@ -270,6 +369,11 @@ class ScenePlay extends Phaser.Scene
             if (this.pointer.isDown)
             {
                 this.player.moveUp();
+            }
+
+            if(this.ff != null) {
+                this.ff.x = this.player.x;
+                this.ff.y = this.player.y;
             }
         }
 
