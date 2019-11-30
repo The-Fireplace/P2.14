@@ -28,7 +28,6 @@ class Entity extends Phaser.GameObjects.Sprite
 
             this.on('animationcomplete', function ()
             {
-                console.log("Animation completed!");
                 if (canDestroy)
                 {
                     this.destroy();
@@ -62,25 +61,22 @@ class Player extends Entity
 
     moveDown()
     {
-        //TODO We won't use this, as the player will always be moving forward
         this.body.velocity.y = this.getData("speed");
     }
 
     moveLeft()
     {
-        //TODO Change this to make it rotate instead
         this.body.velocity.x = -this.getData("speed");
     }
 
     moveRight()
     {
-        //TODO Change this to make it rotate instead
         this.body.velocity.x = this.getData("speed");
     }
 
     update()
     {
-        //TODO Use the speed handle to set how fast it should be moving forward here
+        //TODO Use the throttle to set how fast it should be moving forward here
         this.body.setVelocity(0, 0);
 
         this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.scale.width);
@@ -93,7 +89,6 @@ class Asteroid extends Entity
     constructor(scene, x, y)
     {
         super(scene, x, y, "sprAsteroid", "Asteroid");
-        //TODO the next line moves the asteroid down onto the screen. We'll be moving them in from several directions, so it will have to change based on where we spawn them
         this.body.velocity.y = Phaser.Math.Between(100, 200);
         this.setTexture("sprAsteroid");
     }
