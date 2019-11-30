@@ -46,13 +46,13 @@ class ScenePlay extends Phaser.Scene
             key: "explosionAnim",
             frames: this.anims.generateFrameNumbers("explosionAnim"),
             frameRate: 10,
-            repeat: -1
+            repeat: 0
         });
         this.anims.create({
             key: "forceFieldGrowingAnim",
             frames: this.anims.generateFrameNumbers("forceFieldGrowingAnim"),
             frameRate: 10,
-            repeat: -1
+            repeat: 0
         });
         this.sndExplosion = this.sound.add('explosion');
 

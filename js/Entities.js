@@ -28,7 +28,6 @@ class Entity extends Phaser.GameObjects.Sprite
 
             this.on('animationcomplete', function ()
             {
-                console.log("Animation completed!");
                 if (canDestroy)
                 {
                     this.destroy();
