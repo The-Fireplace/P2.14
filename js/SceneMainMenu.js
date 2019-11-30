@@ -27,9 +27,11 @@ class SceneMainMenu extends Phaser.Scene
             }
         };
         music.addMarker(loopMarker);
-        music.play('loop', {
-            delay: 0
-        });
+        if(!music.isPlaying) {
+            music.play('loop', {
+                delay: 0
+            });
+        }
         this.btnPlay = this.add.sprite(
             this.game.scale.width * 0.5,
             this.game.scale.height * 0.75,
