@@ -209,6 +209,8 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
+        updateCount = 0;
+        moveCount = 0;
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
         let gameHeight = this.cameras.main.height;
@@ -251,6 +253,33 @@ class ScenePlay extends Phaser.Scene
         this.positionControls(width, height);
     }
 
+    canMove(input) {
+        let moveX = true;
+        let moveY = true;
+        if (this.player.x >= this.game.scale.width || this.player.x <= 0) {
+            moveX = false;
+        }
+        if (this.player.y >= this.game.scale.height - cockpitHeight || this.player.y <= 0) {
+            moveY = false;
+        }
+        // console.log('movex: ', moveX, '\tmovey: ', moveY, '\tinput: ', input);
+        if (moveX && moveY) {
+            console.log('both');
+            moveCount +=1;
+        }
+        else if (!moveX && !moveY){
+        }
+        else if (!moveX && input == 'y'){
+            console.log('x');
+            moveCount +=1;
+        }
+        else if (!moveY && input == 'x'){
+            console.log('y');
+            moveCount +=1;
+        }
+
+    }
+
     activateForceField()
     {
         if (this.player.fuel > 50)
@@ -282,49 +311,42 @@ class ScenePlay extends Phaser.Scene
         }
         this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
 
-        if (!this.player.getData("isDead"))
-        {
+        if (!this.player.getData("isDead")) {
             this.player.update();
+            if (this.player.fuel > 0) {
+                //TODO This is where the player controls would go
+                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown) {
+                    this.canMove('y');
+                    this.player.moveUp();
+                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown) {
+                    this.canMove('y');
+                    this.player.moveDown();
+                }
 
-            //TODO This is where the player controls would go
-            if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown)
-            {
-                moveCount += 1;
-                this.player.moveUp();
-            } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown)
-            {
-                moveCount += 1;
-                this.player.moveDown();
-            }
+                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown) {
+                    this.canMove('x');
+                    this.player.moveLeft();
+                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown) {
+                    this.canMove('x');
+                    this.player.moveRight();
+                }
 
-            if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown)
-            {
-                moveCount += 1;
-                this.player.moveLeft();
-            } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown)
-            {
-                moveCount += 1;
-                this.player.moveRight();
-            }
+                this.shieldUseable.on('pointerdown', function (pointer) {
+                    this.scene.activateForceField();
+                });
 
+                if (moveCount >= 40) {
+                    this.player.fuel -= 1;
+                    moveCount = 0;
+                }
             if(this.shieldUseable.visible && this.keySpace.isDown) {
                 this.activateForceField();
             }
 
-            if (moveCount == 20) {
-                this.player.fuel -= 1;
-                moveCount = 0;
-            }
-
-            this.shieldUseable.on('pointerdown', function (pointer)
-            {
-                this.scene.activateForceField();
-            });
-
-            if (this.ff != null)
-            {
-                this.ff.x = this.player.x;
-                this.ff.y = this.player.y;
+                if (this.ff != null) {
+                    this.ff.x = this.player.x;
+                    this.ff.y = this.player.y;
+                }
             }
         }
 
@@ -352,7 +374,8 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
-        if (updateCount % 300 == 0) {
+        console.log('update: ', updateCount, '\nmove: ', moveCount, '\nfuel: ', this.player.fuel);
+        if (updateCount % 300 === 0 && this.player.fuel > 0) {
             updateCount = 0;
             this.player.fuel -= 1;
         }
