@@ -353,10 +353,10 @@ class ScenePlay extends Phaser.Scene
                 this.player.moveRight();
             }
 
-            this.shieldUse.on('pointerdown', function (pointer)
+            this.shieldUseable.on('pointerdown', function (pointer)
             {
                 this.scene.activateForceField();
-            })
+            });
 
             if (this.ff != null)
             {
