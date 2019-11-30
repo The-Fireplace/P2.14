@@ -299,6 +299,10 @@ class ScenePlay extends Phaser.Scene
                 this.player.moveRight();
             }
 
+            if(this.shieldUseable.visible && this.keySpace.isDown) {
+                this.activateForceField();
+            }
+
             if (moveCount == 20) {
                 this.player.fuel -= 1;
                 moveCount = 0;
