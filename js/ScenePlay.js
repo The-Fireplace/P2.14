@@ -47,7 +47,7 @@ class ScenePlay extends Phaser.Scene
         this.anims.create({
             key: "explosionAnim",
             frames: this.anims.generateFrameNumbers("explosionAnim"),
-            frameRate: 10,
+            frameRate: 5,
             repeat: 0
         });
         this.anims.create({
