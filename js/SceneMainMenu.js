@@ -17,18 +17,21 @@ class SceneMainMenu extends Phaser.Scene
 
     create()
     {
-        const music = this.sound.add('music');
-        const loopMarker = {
-            name: 'loop',
-            start: 0,
-            duration: 22.588,
-            config: {
-                loop: true
-            }
-        };
-        music.addMarker(loopMarker);
-        if(!music.isPlaying) {
-            music.play('loop', {
+        //Do it this way so music doesn't get created again every time you end up on the main menu
+        if(this.music == null) {
+            this.music = this.sound.add('music');
+            const loopMarker = {
+                name: 'loop',
+                start: 0,
+                duration: 22.588,
+                config: {
+                    loop: true
+                }
+            };
+            this.music.addMarker(loopMarker);
+        }
+        if(!this.music.isPlaying) {
+            this.music.play('loop', {
                 delay: 0
             });
         }
@@ -69,8 +72,8 @@ class SceneMainMenu extends Phaser.Scene
 
         this.input.on('pointerdown', function (pointer)
         {
-            if(!music.isPlaying) {
-                music.play('loop', {
+            if(!this.music.isPlaying) {
+                this.music.play('loop', {
                     delay: 0
                 });
             }
