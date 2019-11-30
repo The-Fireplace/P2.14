@@ -15,6 +15,7 @@ class Entity extends Phaser.GameObjects.Sprite
         if (!this.getData("isDead"))
         {
             // Set the texture to the explosion image, then play the animation
+            //TODO different animation for asteroid being destroyed?
             this.setTexture("explosionAnim");  // this refers to the same animation key we used when we added this.anims.create previously
             this.play("explosionAnim", true, 4); // play the animation
             //Scale up because the explosion texture is smol

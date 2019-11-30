@@ -171,9 +171,10 @@ class ScenePlay extends Phaser.Scene
                 if (this.ff == null)
                 {
                     player.explode(false);
+                    enemy.explode(true);
                     player.on('animationcomplete', function ()
                     {
-                        this.scene.start("SceneGameOver");
+                        this.scene.scene.start("SceneGameOver");
                     }, player);
                 } else
                 {
