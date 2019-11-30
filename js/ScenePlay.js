@@ -1,4 +1,6 @@
 let cockpitHeight = 0;
+let updateCount = 0;
+let moveCount = 0;
 
 class ScenePlay extends Phaser.Scene
 {
@@ -221,8 +223,10 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.throttle, width / 7.5, height, 0, 1, true);
         this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight / 2);
 
-        localScaleManager.scaleSprite(this.fuel[9], width / 5, height, 0, 1, true);
-        this.fuel[9].setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        for (let i = 0; i < 10; i++) {
+            localScaleManager.scaleSprite(this.fuel[i], width / 5, height, 0, 1, true);
+            this.fuel[i].setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        }
 
         localScaleManager.scaleSprite(this.shieldUseable, width / 6, height, 0, 1, true);
         this.shieldUseable.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
@@ -257,13 +261,17 @@ class ScenePlay extends Phaser.Scene
             });
         }
     }
-
     update()
     {
         for (let i = 0; i < this.backgrounds.length; i++)
         {
             this.backgrounds[i].update();
         }
+
+        for (let i = 0; i < 10; i++) {
+            this.fuel[i].visible = false;
+        }
+        this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
 
         if (!this.player.getData("isDead"))
         {
@@ -272,18 +280,27 @@ class ScenePlay extends Phaser.Scene
             //TODO This is where the player controls would go
             if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown)
             {
+                moveCount += 1;
                 this.player.moveUp();
             } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown)
             {
+                moveCount += 1;
                 this.player.moveDown();
             }
 
             if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown)
             {
+                moveCount += 1;
                 this.player.moveLeft();
             } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown)
             {
+                moveCount += 1;
                 this.player.moveRight();
+            }
+
+            if (moveCount == 20) {
+                this.player.fuel -= 1;
+                moveCount = 0;
             }
 
             this.shieldUseable.on('pointerdown', function (pointer)
@@ -322,5 +339,10 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
+        if (updateCount % 300 == 0) {
+            updateCount = 0;
+            this.player.fuel -= 1;
+        }
+        updateCount += 1;
     }
 }
