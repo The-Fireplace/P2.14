@@ -1,4 +1,6 @@
 let cockpitHeight = 0;
+let updateCount = 0;
+let moveCount = 0;
 
 class ScenePlay extends Phaser.Scene
 {
@@ -87,94 +89,15 @@ class ScenePlay extends Phaser.Scene
         this.steering.scale = .5;
         this.steering.setDepth(3);
 
-        this.fuel0 = this.add.sprite(
-            0,
-            0,
-            "sprFuel0"
-        );
-        this.fuel0.scale = .5;
-        this.fuel0.setDepth(3);
-        this.fuel0.visible = false;
+        this.fuel = [];
 
-        this.fuel1 = this.add.sprite(
-            0,
-            0,
-            "sprFuel1"
-        );
-        this.fuel1.scale = .5;
-        this.fuel1.setDepth(3);
-        this.fuel1.visible = false;
-
-        this.fuel2 = this.add.sprite(
-            0,
-            0,
-            "sprFuel2"
-        );
-        this.fuel2.scale = .5;
-        this.fuel2.setDepth(3);
-        this.fuel2.visible = false;
-
-        this.fuel3 = this.add.sprite(
-            0,
-            0,
-            "sprFuel3"
-        );
-        this.fuel3.scale = .5;
-        this.fuel3.setDepth(3);
-        this.fuel3.visible = false;
-
-        this.fuel4 = this.add.sprite(
-            0,
-            0,
-            "sprFuel4"
-        );
-        this.fuel4.scale = .5;
-        this.fuel4.setDepth(3);
-        this.fuel4.visible = false;
-
-        this.fuel5 = this.add.sprite(
-            0,
-            0,
-            "sprFuel5"
-        );
-        this.fuel5.scale = .5;
-        this.fuel5.setDepth(3);
-        this.fuel5.visible = false;
-
-        this.fuel6 = this.add.sprite(
-            0,
-            0,
-            "sprFuel6"
-        );
-        this.fuel6.scale = .5;
-        this.fuel6.setDepth(3);
-        this.fuel6.visible = false;
-
-        this.fuel7 = this.add.sprite(
-            0,
-            0,
-            "sprFuel7"
-        );
-        this.fuel7.scale = .5;
-        this.fuel7.setDepth(3);
-        this.fuel7.visible = false;
-
-        this.fuel8 = this.add.sprite(
-            0,
-            0,
-            "sprFuel8"
-        );
-        this.fuel8.scale = .5;
-        this.fuel8.setDepth(3);
-        this.fuel8.visible = false;
-
-        this.fuel9 = this.add.sprite(
-            0,
-            0,
-            "sprFuel9"
-        );
-        this.fuel9.scale = .5;
-        this.fuel9.setDepth(3);
+        for (let i = 0; i < 10; i++) {
+            this.fuel[i] = this.add.sprite(0, 0, "sprFuel" + i);
+            this.fuel[i].scale = .5;
+            this.fuel[i].setDepth(3);
+            this.fuel[i].visible = false;
+        }
+        this.fuel[9].visible = true;
 
         this.shieldUseable = this.add.sprite(
             0,
@@ -301,8 +224,10 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.throttle, width / 7.5, height, 0, 1, true);
         this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight / 2);
 
-        localScaleManager.scaleSprite(this.fuel9, width / 5, height, 0, 1, true);
-        this.fuel9.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        for (let i = 0; i < 10; i++) {
+            localScaleManager.scaleSprite(this.fuel[i], width / 5, height, 0, 1, true);
+            this.fuel[i].setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        }
 
         localScaleManager.scaleSprite(this.shieldUseable, width / 6, height, 0, 1, true);
         this.shieldUseable.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
@@ -337,13 +262,17 @@ class ScenePlay extends Phaser.Scene
             });
         }
     }
-
     update()
     {
         for (let i = 0; i < this.backgrounds.length; i++)
         {
             this.backgrounds[i].update();
         }
+
+        for (let i = 0; i < 10; i++) {
+            this.fuel[i].visible = false;
+        }
+        this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
 
         if (!this.player.getData("isDead"))
         {
@@ -352,18 +281,27 @@ class ScenePlay extends Phaser.Scene
             //TODO This is where the player controls would go
             if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown)
             {
+                moveCount += 1;
                 this.player.moveUp();
             } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown)
             {
+                moveCount += 1;
                 this.player.moveDown();
             }
 
             if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown)
             {
+                moveCount += 1;
                 this.player.moveLeft();
             } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown)
             {
+                moveCount += 1;
                 this.player.moveRight();
+            }
+
+            if (moveCount == 20) {
+                this.player.fuel -= 1;
+                moveCount = 0;
             }
 
             this.shieldUseable.on('pointerdown', function (pointer)
@@ -402,5 +340,10 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
+        if (updateCount % 300 == 0) {
+            updateCount = 0;
+            this.player.fuel -= 1;
+        }
+        updateCount += 1;
     }
 }
