@@ -14,6 +14,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprCockpit", "resources/EmptyCockpit.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
+        this.load.image("sprBattery", "resources/battery.png")
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
             frameWidth: 100,
@@ -169,6 +170,7 @@ class ScenePlay extends Phaser.Scene
         this.ff = null;
 
         this.enemies = this.add.group();
+        this.batteries = this.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
@@ -192,6 +194,19 @@ class ScenePlay extends Phaser.Scene
             }
         });
 
+        this.physics.add.overlap(this.player, this.batteries, function (player, battery) {
+           if (!player.getData("isDead") && !battery.getData("isDead")) {
+               battery.explode(true);
+               if (player.scene.player.fuel + 30 > 100) {
+                   player.scene.player.fuel = 100;
+               }
+               else {
+                   player.scene.player.fuel += 30;
+               }
+
+           }
+        });
+
         //Enemy spawning timer
         this.time.addEvent({
             delay: 1000,
@@ -209,6 +224,22 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
+        //Battery spawning timer
+        this.time.addEvent({
+            delay: 8000,
+            callback: function() {
+                const battery = new Battery(
+                    this,
+                    Phaser.Math.Between(0, this.game.scale.width),
+                    0
+                );
+                battery.scale = 2.8;
+                this.batteries.add(battery);
+            },
+            callbackScope: this,
+            loop: true
+        });
+        console.log('fuel: ', this.fuel);
         updateCount = 0;
         moveCount = 0;
         this.scale.on('resize', this.resize, this);
@@ -262,19 +293,15 @@ class ScenePlay extends Phaser.Scene
         if (this.player.y >= this.game.scale.height - cockpitHeight || this.player.y <= 0) {
             moveY = false;
         }
-        // console.log('movex: ', moveX, '\tmovey: ', moveY, '\tinput: ', input);
         if (moveX && moveY) {
-            console.log('both');
             moveCount +=1;
         }
         else if (!moveX && !moveY){
         }
         else if (!moveX && input == 'y'){
-            console.log('x');
             moveCount +=1;
         }
         else if (!moveY && input == 'x'){
-            console.log('y');
             moveCount +=1;
         }
 
@@ -289,7 +316,7 @@ class ScenePlay extends Phaser.Scene
             this.ff = new ForceField(this, this.player.x, this.player.y);
             this.ff.setDepth(2);
             this.time.addEvent({
-                delay: 2000,
+                delay: 5000,
                 callback: function ()
                 {
                     this.ff.powerDown();
@@ -339,9 +366,9 @@ class ScenePlay extends Phaser.Scene
                     this.player.fuel -= 1;
                     moveCount = 0;
                 }
-            if(this.shieldUseable.visible && this.keySpace.isDown) {
-                this.activateForceField();
-            }
+                if(this.shieldUseable.visible && this.keySpace.isDown) {
+                    this.activateForceField();
+                }
 
                 if (this.ff != null) {
                     this.ff.x = this.player.x;
@@ -374,7 +401,31 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
-        console.log('update: ', updateCount, '\nmove: ', moveCount, '\nfuel: ', this.player.fuel);
+
+        for (let i = 0; i < this.batteries.getChildren().length; i++)
+        {
+            const battery = this.batteries.getChildren()[i];
+
+            battery.update();
+
+            if (battery.x < -battery.displayWidth ||
+                battery.x > this.game.scale.width + battery.displayWidth ||
+                battery.y < -battery.displayHeight * 4 ||
+                battery.y > this.game.scale.height + battery.displayHeight)
+            {
+
+                if (battery)
+                {
+                    if (battery.onDestroy !== undefined)
+                    {
+                        battery.onDestroy();
+                    }
+
+                    battery.destroy();
+                }
+
+            }
+        }
         if (updateCount % 300 === 0 && this.player.fuel > 0) {
             updateCount = 0;
             this.player.fuel -= 1;

@@ -42,6 +42,38 @@ class Entity extends Phaser.GameObjects.Sprite
             this.setData("isDead", true);
         }
     }
+    batteryExplode(canDestroy)
+    {
+        if (!this.getData("isDead"))
+        {
+            // Set the texture to the explosion image, then play the animation
+            //TODO different animation for asteroid being destroyed?
+            this.setTexture("explosionAnim");  // this refers to the same animation key we used when we added this.anims.create previously
+            // this.play("explosionAnim", true, 2); // play the animation
+            //Scale up because the explosion texture is smol
+            this.scale = 5;
+
+            // this.scene.sndExplosion.play();
+
+            this.setAngle(0);
+            this.body.setVelocity(0, 0);
+
+            this.on('animationcomplete', function ()
+            {
+                if (canDestroy)
+                {
+                    this.destroy();
+                }
+                else
+                {
+                    this.setVisible(false);
+                }
+
+            }, this);
+
+            this.setData("isDead", true);
+        }
+    }
 }
 
 class Player extends Entity
@@ -90,6 +122,16 @@ class Asteroid extends Entity
         super(scene, x, y, "sprAsteroid", "Asteroid");
         this.body.velocity.y = Phaser.Math.Between(100, 200);
         this.setTexture("sprAsteroid");
+    }
+}
+
+class Battery extends Entity
+{
+    constructor(scene, x, y)
+    {
+        super(scene, x, y, "sprBattery", "Battery");
+        this.body.velocity.y = Phaser.Math.Between(50, 150);
+        this.setTexture("sprBattery");
     }
 }
 
