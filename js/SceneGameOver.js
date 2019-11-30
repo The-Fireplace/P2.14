@@ -10,6 +10,12 @@ class SceneGameOver extends Phaser.Scene {
     }
 
     create() {
+        this.backgrounds = [];
+        for (let i = 0; i < 3; i++)
+        {
+            const bg = new ScrollingBackground(this, "sprBg", i * 10);
+            this.backgrounds.push(bg);
+        }
         this.btnContinue = this.add.sprite(
           this.game.scale.width * 0.5,
           this.game.scale.height * 0.75,
@@ -25,12 +31,18 @@ class SceneGameOver extends Phaser.Scene {
 
         this.input.on('pointerdown', function (pointer)
         {
-            this.scene.start("ScenePlay");
+            this.scene.start("SceneMainMenu");
         }, this);
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
         let gameHeight = this.cameras.main.height;
         this.positionControls(gameWidth, gameHeight);
+    }
+
+    update() {
+        for (let i = 0; i < this.backgrounds.length; i++) {
+            this.backgrounds[i].update();
+        }
     }
 
     positionControls(width, height) {
