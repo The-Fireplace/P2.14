@@ -77,7 +77,6 @@ class Player extends Entity
 
     update()
     {
-        //TODO Use the throttle to set how fast it should be moving forward here
         this.body.setVelocity(0, 0);
 
         this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.scale.width);
@@ -100,7 +99,15 @@ class ForceField extends Entity
     constructor(scene, x, y)
     {
         super(scene, x, y, "sprForceField", "ForceField");
-        this.setTexture("sprForceField");
+        this.setTexture("forceFieldGrowingAnim");
+        //Scale up because the forcefield texture is smol
+        this.scale *= 5;
+        this.play("forceFieldGrowingAnim", true);
+
+        this.on('animationcomplete', function ()
+        {
+            this.setTexture("sprForceField");
+        }, this);
     }
 }
 

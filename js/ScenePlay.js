@@ -168,7 +168,7 @@ class ScenePlay extends Phaser.Scene
                 !enemy.getData("isDead"))
             {
                 //IF force field is not active, then it's game over.
-                if (this.ff == null)
+                if (player.scene.ff == null)
                 {
                     player.explode(false);
                     enemy.explode(true);
@@ -250,8 +250,9 @@ class ScenePlay extends Phaser.Scene
             this.player.fuel -= 50;
             //TODO forcefield sound effect
             this.ff = new ForceField(this, this.player.x, this.player.y);
+            this.ff.setDepth(2);
             this.time.addEvent({
-                delay: 1000,
+                delay: 3000,
                 callback: function ()
                 {
                     this.ff.destroy();
