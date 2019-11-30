@@ -236,10 +236,14 @@ class ScenePlay extends Phaser.Scene
             if (!player.getData("isDead") &&
                 !enemy.getData("isDead"))
             {
+                //IF force field is not active, then it's game over.
                 if (this.ff == null)
                 {
                     player.explode(false);
-                    enemy.explode(true);
+                    player.on('animationcomplete', function ()
+                    {
+                        this.scene.start("SceneGameOver");
+                    }, player);
                 } else
                 {
                     enemy.explode(true);
