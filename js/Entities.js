@@ -21,7 +21,6 @@ class Entity extends Phaser.GameObjects.Sprite
             //Scale up because the explosion texture is smol
             this.scale *= 5;
 
-            // pick a random explosion sound within the array we defined in this.sfx in SceneMain
             this.scene.sndExplosion.play();
 
             this.setAngle(0);
@@ -104,9 +103,24 @@ class ForceField extends Entity
         this.scale *= 5;
         this.play("forceFieldGrowingAnim", true);
 
+        this.scene.sndForceFieldOn.play();
+
         this.on('animationcomplete', function ()
         {
             this.setTexture("sprForceField");
+        }, this);
+    }
+
+    powerDown() {
+        this.setTexture("forceFieldGrowingAnim");
+        this.anims.playReverse("forceFieldGrowingAnim", true);
+
+        this.scene.sndForceFieldOff.play();
+
+        this.on('animationcomplete', function ()
+        {
+            this.scene.ff = null;
+            this.destroy();
         }, this);
     }
 }

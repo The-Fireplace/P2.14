@@ -40,6 +40,10 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprSpeedHandle", "resources/SpeedHandle.png");
         this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
+        this.load.audio('forceFieldOn', 'resources/zapsplat_power_up.mp3');
+        this.load.audio('forceFieldOff', 'resources/zapsplat_power_down.mp3');
+        this.load.audio('lose', 'resources/zapsplat_lose.mp3');
+        this.load.audio('win', 'resources/zapsplat_fanfare.mp3');
     }
 
     create()
@@ -57,6 +61,10 @@ class ScenePlay extends Phaser.Scene
             repeat: 0
         });
         this.sndExplosion = this.sound.add('explosion');
+        this.sndForceFieldOn = this.sound.add('forceFieldOn');
+        this.sndForceFieldOff = this.sound.add('forceFieldOff');
+        this.sndLose = this.sound.add('lose');
+        this.sndWin = this.sound.add('win');
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++)
@@ -174,6 +182,7 @@ class ScenePlay extends Phaser.Scene
                     enemy.explode(true);
                     player.on('animationcomplete', function ()
                     {
+                        this.scene.sndLose.play();
                         this.scene.scene.start("SceneGameOver");
                     }, player);
                 } else
@@ -248,15 +257,13 @@ class ScenePlay extends Phaser.Scene
         {
             //Activate forcefield
             this.player.fuel -= 50;
-            //TODO forcefield sound effect
             this.ff = new ForceField(this, this.player.x, this.player.y);
             this.ff.setDepth(2);
             this.time.addEvent({
-                delay: 3000,
+                delay: 2000,
                 callback: function ()
                 {
-                    this.ff.destroy();
-                    this.ff = null;
+                    this.ff.powerDown();
                 },
                 callbackScope: this,
                 loop: false
