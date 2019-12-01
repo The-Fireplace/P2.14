@@ -1,4 +1,6 @@
 let cockpitHeight = 0;
+let updateCount = 0;
+let moveCount = 0;
 
 class ScenePlay extends Phaser.Scene
 {
@@ -12,6 +14,8 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprCockpit", "resources/EmptyCockpit.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
+        this.load.image("sprBattery", "resources/battery.png");
+        this.load.image("sprPlusFuel", "resources/plus_fuel.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
             frameWidth: 100,
@@ -38,6 +42,10 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprSpeedHandle", "resources/SpeedHandle.png");
         this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
+        this.load.audio('forceFieldOn', 'resources/zapsplat_power_up.mp3');
+        this.load.audio('forceFieldOff', 'resources/zapsplat_power_down.mp3');
+        this.load.audio('lose', 'resources/zapsplat_lose.mp3');
+        this.load.audio('win', 'resources/zapsplat_fanfare.mp3');
     }
 
     create()
@@ -45,7 +53,7 @@ class ScenePlay extends Phaser.Scene
         this.anims.create({
             key: "explosionAnim",
             frames: this.anims.generateFrameNumbers("explosionAnim"),
-            frameRate: 10,
+            frameRate: 5,
             repeat: 0
         });
         this.anims.create({
@@ -55,6 +63,10 @@ class ScenePlay extends Phaser.Scene
             repeat: 0
         });
         this.sndExplosion = this.sound.add('explosion');
+        this.sndForceFieldOn = this.sound.add('forceFieldOn');
+        this.sndForceFieldOff = this.sound.add('forceFieldOff');
+        this.sndLose = this.sound.add('lose');
+        this.sndWin = this.sound.add('win');
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++)
@@ -87,94 +99,15 @@ class ScenePlay extends Phaser.Scene
         this.steering.scale = .5;
         this.steering.setDepth(3);
 
-        this.fuel0 = this.add.sprite(
-            0,
-            0,
-            "sprFuel0"
-        );
-        this.fuel0.scale = .5;
-        this.fuel0.setDepth(3);
-        this.fuel0.visible = false;
+        this.fuel = [];
 
-        this.fuel1 = this.add.sprite(
-            0,
-            0,
-            "sprFuel1"
-        );
-        this.fuel1.scale = .5;
-        this.fuel1.setDepth(3);
-        this.fuel1.visible = false;
-
-        this.fuel2 = this.add.sprite(
-            0,
-            0,
-            "sprFuel2"
-        );
-        this.fuel2.scale = .5;
-        this.fuel2.setDepth(3);
-        this.fuel2.visible = false;
-
-        this.fuel3 = this.add.sprite(
-            0,
-            0,
-            "sprFuel3"
-        );
-        this.fuel3.scale = .5;
-        this.fuel3.setDepth(3);
-        this.fuel3.visible = false;
-
-        this.fuel4 = this.add.sprite(
-            0,
-            0,
-            "sprFuel4"
-        );
-        this.fuel4.scale = .5;
-        this.fuel4.setDepth(3);
-        this.fuel4.visible = false;
-
-        this.fuel5 = this.add.sprite(
-            0,
-            0,
-            "sprFuel5"
-        );
-        this.fuel5.scale = .5;
-        this.fuel5.setDepth(3);
-        this.fuel5.visible = false;
-
-        this.fuel6 = this.add.sprite(
-            0,
-            0,
-            "sprFuel6"
-        );
-        this.fuel6.scale = .5;
-        this.fuel6.setDepth(3);
-        this.fuel6.visible = false;
-
-        this.fuel7 = this.add.sprite(
-            0,
-            0,
-            "sprFuel7"
-        );
-        this.fuel7.scale = .5;
-        this.fuel7.setDepth(3);
-        this.fuel7.visible = false;
-
-        this.fuel8 = this.add.sprite(
-            0,
-            0,
-            "sprFuel8"
-        );
-        this.fuel8.scale = .5;
-        this.fuel8.setDepth(3);
-        this.fuel8.visible = false;
-
-        this.fuel9 = this.add.sprite(
-            0,
-            0,
-            "sprFuel9"
-        );
-        this.fuel9.scale = .5;
-        this.fuel9.setDepth(3);
+        for (let i = 0; i < 10; i++) {
+            this.fuel[i] = this.add.sprite(0, 0, "sprFuel" + i);
+            this.fuel[i].scale = .5;
+            this.fuel[i].setDepth(3);
+            this.fuel[i].visible = false;
+        }
+        this.fuel[9].visible = true;
 
         this.shieldUseable = this.add.sprite(
             0,
@@ -211,6 +144,14 @@ class ScenePlay extends Phaser.Scene
         this.cockPit.setDepth(2);
         cockpitHeight = this.cockPit.displayHeight;
 
+        this.plusFuel = this.add.sprite(
+            0,
+            0,
+            "sprPlusFuel"
+        );
+        this.plusFuel.visible = false;
+        this.plusFuel.setDepth(2);
+
         this.player = new Player(
             this,
             0,
@@ -224,27 +165,54 @@ class ScenePlay extends Phaser.Scene
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.keyNum8 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT);
+        this.keyNum5 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE);
+        this.keyNum4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR);
+        this.keyNum6 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX);
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.pointer = this.input.activePointer;
 
         this.ff = null;
 
         this.enemies = this.add.group();
+        this.batteries = this.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
             if (!player.getData("isDead") &&
                 !enemy.getData("isDead"))
             {
-                if (this.ff == null)
+                //IF force field is not active, then it's game over.
+                if (player.scene.ff == null)
                 {
                     player.explode(false);
                     enemy.explode(true);
+                    player.on('animationcomplete', function ()
+                    {
+                        this.scene.sndLose.play();
+                        this.scene.scene.start("SceneGameOver");
+                    }, player);
                 } else
                 {
                     enemy.explode(true);
                 }
             }
+        });
+
+        this.physics.add.overlap(this.player, this.batteries, function (player, battery) {
+           if (!player.getData("isDead") && !battery.getData("isDead")) {
+               if (player.scene.player.fuel + 30 > 100) {
+                   player.scene.player.fuel = 100;
+               }
+               else {
+                   player.scene.player.fuel += 30;
+               }
+               battery.batteryExplode(true);
+           }
         });
 
         //Enemy spawning timer
@@ -264,6 +232,24 @@ class ScenePlay extends Phaser.Scene
             loop: true
         });
 
+        //Battery spawning timer
+        this.time.addEvent({
+            delay: 8000,
+            callback: function() {
+                const battery = new Battery(
+                    this,
+                    Phaser.Math.Between(0, this.game.scale.width),
+                    0
+                );
+                battery.scale = 2.8;
+                this.batteries.add(battery);
+            },
+            callbackScope: this,
+            loop: true
+        });
+
+        updateCount = 0;
+        moveCount = 0;
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
         let gameHeight = this.cameras.main.height;
@@ -288,8 +274,10 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.throttle, width / 7.5, height, 0, 1, true);
         this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight / 2);
 
-        localScaleManager.scaleSprite(this.fuel9, width / 5, height, 0, 1, true);
-        this.fuel9.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        for (let i = 0; i < 10; i++) {
+            localScaleManager.scaleSprite(this.fuel[i], width / 5, height, 0, 1, true);
+            this.fuel[i].setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
+        }
 
         localScaleManager.scaleSprite(this.shieldUseable, width / 6, height, 0, 1, true);
         this.shieldUseable.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
@@ -304,27 +292,48 @@ class ScenePlay extends Phaser.Scene
         this.positionControls(width, height);
     }
 
+    canMove(input) {
+        let moveX = true;
+        let moveY = true;
+        if (this.player.x >= this.game.scale.width || this.player.x <= 0) {
+            moveX = false;
+        }
+        if (this.player.y >= this.game.scale.height - cockpitHeight || this.player.y <= 0) {
+            moveY = false;
+        }
+        if (moveX && moveY) {
+            moveCount +=1;
+        }
+        else if (!moveX && !moveY){
+        }
+        else if (!moveX && input == 'y'){
+            moveCount +=1;
+        }
+        else if (!moveY && input == 'x'){
+            moveCount +=1;
+        }
+
+    }
+
     activateForceField()
     {
         if (this.player.fuel > 50)
         {
             //Activate forcefield
             this.player.fuel -= 50;
-            //TODO forcefield sound effect
             this.ff = new ForceField(this, this.player.x, this.player.y);
+            this.ff.setDepth(2);
             this.time.addEvent({
-                delay: 1000,
+                delay: 5000,
                 callback: function ()
                 {
-                    this.ff.destroy();
-                    this.ff = null;
+                    this.ff.powerDown();
                 },
                 callbackScope: this,
                 loop: false
             });
         }
     }
-
     update()
     {
         for (let i = 0; i < this.backgrounds.length; i++)
@@ -332,36 +341,47 @@ class ScenePlay extends Phaser.Scene
             this.backgrounds[i].update();
         }
 
-        if (!this.player.getData("isDead"))
-        {
+        for (let i = 0; i < 10; i++) {
+            this.fuel[i].visible = false;
+        }
+        this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
+
+        if (!this.player.getData("isDead")) {
             this.player.update();
+            if (this.player.fuel > 0) {
+                //TODO This is where the player controls would go
+                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown) {
+                    this.canMove('y');
+                    this.player.moveUp();
+                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown) {
+                    this.canMove('y');
+                    this.player.moveDown();
+                }
 
-            //TODO This is where the player controls would go
-            if (this.keyW.isDown)
-            {
-                this.player.moveUp();
-            } else if (this.keyS.isDown)
-            {
-                this.player.moveDown();
-            }
+                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown) {
+                    this.canMove('x');
+                    this.player.moveLeft();
+                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown) {
+                    this.canMove('x');
+                    this.player.moveRight();
+                }
 
-            if (this.keyA.isDown)
-            {
-                this.player.moveLeft();
-            } else if (this.keyD.isDown)
-            {
-                this.player.moveRight();
-            }
+                this.shieldUseable.on('pointerdown', function (pointer) {
+                    this.scene.activateForceField();
+                });
 
-            this.shieldUseable.on('pointerdown', function (pointer)
-            {
-                this.scene.activateForceField();
-            });
+                if (moveCount >= 40) {
+                    this.player.fuel -= 1;
+                    moveCount = 0;
+                }
+                if(this.shieldUseable.visible && this.keySpace.isDown) {
+                    this.activateForceField();
+                }
 
-            if (this.ff != null)
-            {
-                this.ff.x = this.player.x;
-                this.ff.y = this.player.y;
+                if (this.ff != null) {
+                    this.ff.x = this.player.x;
+                    this.ff.y = this.player.y;
+                }
             }
         }
 
@@ -389,5 +409,35 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
+
+        for (let i = 0; i < this.batteries.getChildren().length; i++)
+        {
+            const battery = this.batteries.getChildren()[i];
+
+            battery.update();
+
+            if (battery.x < -battery.displayWidth ||
+                battery.x > this.game.scale.width + battery.displayWidth ||
+                battery.y < -battery.displayHeight * 4 ||
+                battery.y > this.game.scale.height + battery.displayHeight)
+            {
+
+                if (battery)
+                {
+                    if (battery.onDestroy !== undefined)
+                    {
+                        battery.onDestroy();
+                    }
+
+                    battery.destroy();
+                }
+
+            }
+        }
+        if (updateCount % 300 === 0 && this.player.fuel > 0) {
+            updateCount = 0;
+            this.player.fuel -= 1;
+        }
+        updateCount += 1;
     }
 }

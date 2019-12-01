@@ -17,19 +17,24 @@ class SceneMainMenu extends Phaser.Scene
 
     create()
     {
-        const music = this.sound.add('music');
-        const loopMarker = {
-            name: 'loop',
-            start: 0,
-            duration: 22.588,
-            config: {
-                loop: true
-            }
-        };
-        music.addMarker(loopMarker);
-        music.play('loop', {
-            delay: 0
-        });
+        //Do it this way so music doesn't get created again every time you end up on the main menu
+        if(this.music == null) {
+            this.music = this.sound.add('music');
+            const loopMarker = {
+                name: 'loop',
+                start: 0,
+                duration: 22.588,
+                config: {
+                    loop: true
+                }
+            };
+            this.music.addMarker(loopMarker);
+        }
+        if(!this.music.isPlaying) {
+            this.music.play('loop', {
+                delay: 0
+            });
+        }
         this.btnPlay = this.add.sprite(
             this.game.scale.width * 0.5,
             this.game.scale.height * 0.75,
@@ -67,6 +72,11 @@ class SceneMainMenu extends Phaser.Scene
 
         this.input.on('pointerdown', function (pointer)
         {
+            if(!this.music.isPlaying) {
+                this.music.play('loop', {
+                    delay: 0
+                });
+            }
             //TODO Not on options click
             this.scene.start("ScenePlay");
         }, this);

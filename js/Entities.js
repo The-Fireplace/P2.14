@@ -15,12 +15,12 @@ class Entity extends Phaser.GameObjects.Sprite
         if (!this.getData("isDead"))
         {
             // Set the texture to the explosion image, then play the animation
+            //TODO different animation for asteroid being destroyed?
             this.setTexture("explosionAnim");  // this refers to the same animation key we used when we added this.anims.create previously
-            this.play("explosionAnim", true, 4); // play the animation
+            this.play("explosionAnim", true, 2); // play the animation
             //Scale up because the explosion texture is smol
             this.scale *= 5;
 
-            // pick a random explosion sound within the array we defined in this.sfx in SceneMain
             this.scene.sndExplosion.play();
 
             this.setAngle(0);
@@ -38,6 +38,41 @@ class Entity extends Phaser.GameObjects.Sprite
                 }
 
             }, this);
+
+            this.setData("isDead", true);
+        }
+    }
+
+    batteryExplode(canDestroy)
+    {
+        if (!this.getData("isDead"))
+        {
+            //TODO different animation for asteroid being destroyed?
+            this.setTexture("sprPlusFuel");
+            this.texture.visible = true;
+            this.setDepth(2);
+            this.scale = 1.5;
+            this.scene.tweens.add({
+                targets: this,
+                alpha: {value: 0, duration: 1500, ease: 'Power1', delay: 1500},
+                yoyo: false,
+                loop: false
+            });
+
+            this.body.setVelocity(0, 0);
+
+            this.scene.time.addEvent({
+                delay: 3000,
+                callback: function() {
+                    if (canDestroy)
+                    {
+                        this.destroy();
+                    }
+                },
+                callbackScope: this,
+                loop: false
+            });
+
 
             this.setData("isDead", true);
         }
@@ -76,7 +111,6 @@ class Player extends Entity
 
     update()
     {
-        //TODO Use the throttle to set how fast it should be moving forward here
         this.body.setVelocity(0, 0);
 
         this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.scale.width);
@@ -94,12 +128,45 @@ class Asteroid extends Entity
     }
 }
 
+class Battery extends Entity
+{
+    constructor(scene, x, y)
+    {
+        super(scene, x, y, "sprBattery", "Battery");
+        this.body.velocity.y = Phaser.Math.Between(50, 150);
+        this.setTexture("sprBattery");
+    }
+}
+
 class ForceField extends Entity
 {
     constructor(scene, x, y)
     {
         super(scene, x, y, "sprForceField", "ForceField");
-        this.setTexture("sprForceField");
+        this.setTexture("forceFieldGrowingAnim");
+        //Scale up because the forcefield texture is smol
+        this.scale *= 5;
+        this.play("forceFieldGrowingAnim", true);
+
+        this.scene.sndForceFieldOn.play();
+
+        this.on('animationcomplete', function ()
+        {
+            this.setTexture("sprForceField");
+        }, this);
+    }
+
+    powerDown() {
+        this.setTexture("forceFieldGrowingAnim");
+        this.anims.playReverse("forceFieldGrowingAnim", true);
+
+        this.scene.sndForceFieldOff.play();
+
+        this.on('animationcomplete', function ()
+        {
+            this.scene.ff = null;
+            this.destroy();
+        }, this);
     }
 }
 
