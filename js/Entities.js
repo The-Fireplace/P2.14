@@ -143,9 +143,8 @@ class Planet extends Entity
     constructor(scene, x, y)
     {
         super(scene, x, y, "sprPlanet", "Planet");
-        this.body.velocity.y = 50;
+        //this.body.velocity.y = 50;
         this.setTexture("sprPlanet");
-        this.scale *= 10;
     }
 }
 

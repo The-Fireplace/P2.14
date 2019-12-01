@@ -184,8 +184,6 @@ class ScenePlay extends Phaser.Scene
 
         this.enemies = this.add.group();
         this.batteries = this.add.group();
-        this.planetGroup = this.add.group();
-        this.planetExplosionGroup = this.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
@@ -222,39 +220,14 @@ class ScenePlay extends Phaser.Scene
            }
         });
 
-        this.planetCollided = false;
-
-        this.physics.add.overlap(this.player, this.planetGroup, function (player, planet)
-        {
-            if (!player.getData("isDead") && !planet.scene.planetCollided)
-            {
-                //Blow up the planet if there isn't already an explosion there.
-                planet.scene.time.addEvent({
-                    delay: 1000,
-                    callback: function () {
-                        const explosion = new PlanetExplosion(
-                          planet.scene,
-                          player.x,
-                          player.y
-                        );
-                        explosion.setDepth(0);
-                        planet.scene.planetExplosionGroup.add(explosion);
-                    },
-                    callbackScope: this,
-                    loop: true
-                });
-                planet.scene.planetCollided = true;
-            }
-        });
-
-        this.planetSpawn = false;
+        this.planetSpawned = false;
 
         //Enemy spawning timer
         this.time.addEvent({
             delay: 1000,
             callback: function ()
             {
-                if(this.planetSpawn) {
+                if(this.planetSpawned) {
                     return;
                 }
                 const enemy = new Asteroid(
@@ -273,6 +246,9 @@ class ScenePlay extends Phaser.Scene
         this.time.addEvent({
             delay: 8000,
             callback: function() {
+                if(this.planetSpawned) {
+                    return;
+                }
                 const battery = new Battery(
                     this,
                     Phaser.Math.Between(0, this.game.scale.width),
@@ -288,17 +264,34 @@ class ScenePlay extends Phaser.Scene
         //Planet spawning timer
         this.time.addEvent({
             //3 minutes before planet spawn
-            delay: 1000/* * 60 * 3*/,
+            delay: 1000/* * 60*/ * 3,
             callback: function ()
             {
-                this.planetSpawn = true;
+                this.planetSpawned = true;
                 const planet = new Planet(
                   this,
                   this.game.scale.width/2,
                   -320
                 );
                 planet.setDepth(-1);
-                this.planetGroup.add(planet);
+                this.tweens.add({
+                    targets: planet,
+                    y: 400,
+                    duration: 2000,
+                    ease: 'Sine.easeInOut',
+                    repeat: 0,
+                    yoyo: false
+                });
+
+                this.tweens.add({
+                    targets: this.player,
+                    y: this.game.scale.height * 0.6,
+                    x: this.game.scale.width * 0.5,
+                    duration: 2000,
+                    ease: 'Sine.easeInOut',
+                    repeat: 0,
+                    yoyo: false
+                });
             },
             callbackScope: this,
             loop: false
@@ -390,6 +383,11 @@ class ScenePlay extends Phaser.Scene
             });
         }
     }
+
+    canUseControls() {
+        return this.player.fuel > 0 && !this.planetSpawned;
+    }
+
     update()
     {
         for (let i = 0; i < this.backgrounds.length; i++)
@@ -404,7 +402,7 @@ class ScenePlay extends Phaser.Scene
 
         if (!this.player.getData("isDead")) {
             this.player.update();
-            if (this.player.fuel > 0) {
+            if (this.canUseControls()) {
                 //TODO This is where the player controls would go
                 if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown) {
                     this.canMove('y');
