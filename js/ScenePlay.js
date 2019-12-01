@@ -221,6 +221,7 @@ class ScenePlay extends Phaser.Scene
         });
 
         this.planetSpawned = false;
+        this.planetSceneStarted = false;
 
         //Enemy spawning timer
         this.time.addEvent({
@@ -268,29 +269,55 @@ class ScenePlay extends Phaser.Scene
             callback: function ()
             {
                 this.planetSpawned = true;
-                const planet = new Planet(
+                this.planet = new Planet(
                   this,
                   this.game.scale.width/2,
                   -320
                 );
-                planet.setDepth(-1);
-                this.tweens.add({
-                    targets: planet,
-                    y: 400,
-                    duration: 2000,
-                    ease: 'Sine.easeInOut',
-                    repeat: 0,
-                    yoyo: false
-                });
+                this.planet.setDepth(-1);
+                this.time.addEvent({
+                    delay: 6400,
+                    callback: function ()
+                    {
+                        this.planetSceneStarted = true;
+                        this.tweens.add({
+                            targets: this.planet,
+                            y: this.game.scale.height * 0.3,
+                            duration: 4000,
+                            ease: 'Sine.easeInOut',
+                            repeat: 0,
+                            yoyo: false
+                        });
 
-                this.tweens.add({
-                    targets: this.player,
-                    y: this.game.scale.height * 0.6,
-                    x: this.game.scale.width * 0.5,
-                    duration: 2000,
-                    ease: 'Sine.easeInOut',
-                    repeat: 0,
-                    yoyo: false
+                        this.tweens.add({
+                            targets: this.player,
+                            y: this.game.scale.height * 0.3,
+                            x: this.game.scale.width * 0.5,
+                            duration: 4000,
+                            ease: 'Sine.easeInOut',
+                            repeat: 0,
+                            yoyo: false
+                        });
+
+                        this.time.addEvent({
+                            delay: 4000,
+                            callback: function ()
+                            {
+                                this.planet.scale *= 2;
+                                this.planet.explode(false);
+                                //this.player.explode(false);
+                                this.planet.on('animationcomplete', function ()
+                                {
+                                    this.scene.sndWin.play();
+                                    this.scene.scene.start("SceneGameOver");
+                                }, this.planet);
+                            },
+                            callbackScope: this,
+                            loop: false
+                        })
+                    },
+                    callbackScope: this,
+                    loop: false
                 });
             },
             callbackScope: this,
@@ -385,7 +412,7 @@ class ScenePlay extends Phaser.Scene
     }
 
     canUseControls() {
-        return this.player.fuel > 0 && !this.planetSpawned;
+        return this.player.fuel > 0 && !this.planetSceneStarted;
     }
 
     update()
