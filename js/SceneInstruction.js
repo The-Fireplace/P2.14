@@ -23,6 +23,7 @@ class SceneInstruction extends Phaser.Scene {
         this.btnPlay = this.add.sprite(0, 0, "sprBtnPlay");
         this.btnShip = this.add.sprite(0, 0, "sprShip");
         this.cockPit = this.add.sprite(0, 0, "sprCockpit");
+        this.cockPit.alpha = .4;
         this.cockPit.setDepth(3);
         this.asteroid = this.add.sprite(0, 0, "sprAsteroid");
         this.planet = this.add.sprite(0, 0, "sprPlanet");
@@ -69,7 +70,7 @@ class SceneInstruction extends Phaser.Scene {
         this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight / 2);
 
         localScaleManager.scaleSprite(this.asteroid, width/6, height, 0, 1, true);
-        this.asteroid.setPosition(width * .2, height *.3);
+        this.asteroid.setPosition(width * .2, height *.4);
 
         localScaleManager.scaleSprite(this.planet, width, height, 0, 1, true);
         this.planet.setPosition(width * .5, 0);

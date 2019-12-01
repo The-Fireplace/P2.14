@@ -224,7 +224,8 @@ class ScenePlay extends Phaser.Scene
                     Phaser.Math.Between(0, this.game.scale.width),
                     0
                 );
-                enemy.scale = 0.3;
+                enemy.scale = 0.15 + Phaser.Math.Between(0, 20)/100;
+                enemy.rotation = Phaser.Math.Between(0, 359);
                 this.enemies.add(enemy);
             },
             callbackScope: this,
@@ -390,7 +391,7 @@ class ScenePlay extends Phaser.Scene
                 }
 
                 this.shieldUseable.on('pointerdown', function (pointer) {
-                    this.activateForceField();
+                    this.scene.activateForceField();
                 });
 
                 if (moveCount >= 40) {
