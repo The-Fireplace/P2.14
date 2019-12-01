@@ -1,3 +1,7 @@
+let bgConfig = {
+    volume: .08,
+    loop: true
+};
 class SceneMainMenu extends Phaser.Scene
 {
     constructor()
@@ -24,20 +28,16 @@ class SceneMainMenu extends Phaser.Scene
                 name: 'loop',
                 start: 0,
                 duration: 22.588,
-                config: {
-                    loop: true
-                }
+                config: bgConfig
             };
             this.music.addMarker(loopMarker);
         }
-        this.music.volume = .3;
         if(!this.music.isPlaying) {
             this.music.play('loop', {
-                volume: .3,
                 delay: 0
             });
         }
-        console.log('music', this.music);
+
         this.btnPlay = this.add.sprite(
             this.game.scale.width * 0.5,
             this.game.scale.height * 0.75,
