@@ -14,7 +14,8 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprCockpit", "resources/EmptyCockpit.png");
         this.load.image("sprAsteroid", "resources/asteroid.png");
-        this.load.image("sprBattery", "resources/battery.png")
+        this.load.image("sprBattery", "resources/battery.png");
+        this.load.image("sprPlusFuel", "resources/plus_fuel.png");
         this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
             frameWidth: 100,
@@ -143,6 +144,14 @@ class ScenePlay extends Phaser.Scene
         this.cockPit.setDepth(2);
         cockpitHeight = this.cockPit.displayHeight;
 
+        this.plusFuel = this.add.sprite(
+            0,
+            0,
+            "sprPlusFuel"
+        );
+        this.plusFuel.visible = false;
+        this.plusFuel.setDepth(2);
+
         this.player = new Player(
             this,
             0,
@@ -196,14 +205,13 @@ class ScenePlay extends Phaser.Scene
 
         this.physics.add.overlap(this.player, this.batteries, function (player, battery) {
            if (!player.getData("isDead") && !battery.getData("isDead")) {
-               battery.explode(true);
                if (player.scene.player.fuel + 30 > 100) {
                    player.scene.player.fuel = 100;
                }
                else {
                    player.scene.player.fuel += 30;
                }
-
+               battery.batteryExplode(true);
            }
         });
 
@@ -239,7 +247,7 @@ class ScenePlay extends Phaser.Scene
             callbackScope: this,
             loop: true
         });
-        console.log('fuel: ', this.fuel);
+
         updateCount = 0;
         moveCount = 0;
         this.scale.on('resize', this.resize, this);
