@@ -1,6 +1,7 @@
 let cockpitHeight = 0;
 let updateCount = 0;
 let moveCount = 0;
+let sfx = {volume: .08};
 
 class ScenePlay extends Phaser.Scene
 {
@@ -63,12 +64,12 @@ class ScenePlay extends Phaser.Scene
             frameRate: 10,
             repeat: 0
         });
-        this.sndExplosion = this.sound.add('explosion');
-        this.sndForceFieldOn = this.sound.add('forceFieldOn');
-        this.sndForceFieldOff = this.sound.add('forceFieldOff');
-        this.sndLose = this.sound.add('lose');
-        this.sndWin = this.sound.add('win');
-        this.sndCharge = this.sound.add('charge');
+        this.sndExplosion = this.sound.add('explosion', sfx);
+        this.sndForceFieldOn = this.sound.add('forceFieldOn', sfx);
+        this.sndForceFieldOff = this.sound.add('forceFieldOff', sfx);
+        this.sndLose = this.sound.add('lose', sfx);
+        this.sndWin = this.sound.add('win', sfx);
+        this.sndCharge = this.sound.add('charge', sfx);
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++)
