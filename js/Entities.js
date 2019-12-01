@@ -93,6 +93,43 @@ class Asteroid extends Entity
     }
 }
 
+class Planet extends Entity
+{
+    constructor(scene, x, y)
+    {
+        super(scene, x, y, "sprPlanet", "Planet");
+        this.body.velocity.y = 50;
+        this.setTexture("sprPlanet");
+        this.scale *= 10;
+    }
+}
+
+class PlanetExplosion extends Entity
+{
+    constructor(scene, x, y)
+    {
+        super(scene, x, y, "explosionAnim", "PlanetExplosion");
+        this.body.velocity.y = 50;
+        this.setTexture("explosionAnim");
+        // Set the texture to the explosion image, then play the animation
+        //TODO different animation for asteroid being destroyed?
+        this.play("explosionAnim", true, 2); // play the animation
+        //Scale up because the explosion texture is smol
+        this.scale *= 2;
+
+        this.scene.sndExplosion.play();
+
+        this.setAngle(Phaser.Math.Between(0, 360));
+
+        this.on('animationcomplete', function ()
+        {
+            this.destroy();
+        }, this);
+
+        this.setData("isDead", true);
+    }
+}
+
 class ForceField extends Entity
 {
     constructor(scene, x, y)

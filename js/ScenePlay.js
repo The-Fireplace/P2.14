@@ -39,6 +39,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprFuel8", "resources/Fuel8.png");
         this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprSpeedHandle", "resources/SpeedHandle.png");
+        this.load.image("sprPlanet", "resources/planet.png");
         this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
         this.load.audio('forceFieldOn', 'resources/zapsplat_power_up.mp3');
         this.load.audio('forceFieldOff', 'resources/zapsplat_power_down.mp3');
@@ -169,6 +170,8 @@ class ScenePlay extends Phaser.Scene
         this.ff = null;
 
         this.enemies = this.add.group();
+        this.planetGroup = this.add.group();
+        this.planetExplosionGroup = this.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, function (player, enemy)
         {
@@ -192,11 +195,41 @@ class ScenePlay extends Phaser.Scene
             }
         });
 
+        this.planetCollided = false;
+
+        this.physics.add.overlap(this.player, this.planetGroup, function (player, planet)
+        {
+            if (!player.getData("isDead") && !planet.scene.planetCollided)
+            {
+                //Blow up the planet if there isn't already an explosion there.
+                planet.scene.time.addEvent({
+                    delay: 1000,
+                    callback: function () {
+                        const explosion = new PlanetExplosion(
+                          planet.scene,
+                          player.x,
+                          player.y
+                        );
+                        explosion.setDepth(0);
+                        planet.scene.planetExplosionGroup.add(explosion);
+                    },
+                    callbackScope: this,
+                    loop: true
+                });
+                planet.scene.planetCollided = true;
+            }
+        });
+
+        this.planetSpawn = false;
+
         //Enemy spawning timer
         this.time.addEvent({
             delay: 1000,
             callback: function ()
             {
+                if(this.planetSpawn) {
+                    return;
+                }
                 const enemy = new Asteroid(
                     this,
                     Phaser.Math.Between(0, this.game.scale.width),
@@ -207,6 +240,25 @@ class ScenePlay extends Phaser.Scene
             },
             callbackScope: this,
             loop: true
+        });
+
+        //Planet spawning timer
+        this.time.addEvent({
+            //3 minutes before planet spawn
+            delay: 1000/* * 60 * 3*/,
+            callback: function ()
+            {
+                this.planetSpawn = true;
+                const planet = new Planet(
+                  this,
+                  this.game.scale.width/2,
+                  -320
+                );
+                planet.setDepth(-1);
+                this.planetGroup.add(planet);
+            },
+            callbackScope: this,
+            loop: false
         });
 
         updateCount = 0;
