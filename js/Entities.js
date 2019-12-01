@@ -203,6 +203,8 @@ class ForceField extends Entity
         this.on('animationcomplete', function ()
         {
             this.scene.ff = null;
+            this.scene.shieldInUse.visible = false;
+            this.scene.shieldNotUse.visible = true;
             this.destroy();
         }, this);
     }
