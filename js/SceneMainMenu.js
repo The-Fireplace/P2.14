@@ -25,18 +25,19 @@ class SceneMainMenu extends Phaser.Scene
                 start: 0,
                 duration: 22.588,
                 config: {
-                    volume: .2,
                     loop: true
                 }
             };
             this.music.addMarker(loopMarker);
         }
+        this.music.volume = .3;
         if(!this.music.isPlaying) {
             this.music.play('loop', {
                 volume: .3,
                 delay: 0
             });
         }
+        console.log('music', this.music);
         this.btnPlay = this.add.sprite(
             this.game.scale.width * 0.5,
             this.game.scale.height * 0.75,
@@ -74,13 +75,13 @@ class SceneMainMenu extends Phaser.Scene
 
         this.input.on('pointerdown', function (pointer)
         {
+            game.sound.context.resume();
             if(!this.music.isPlaying) {
-                this.music.play('loop', {
+                this.music.play({
                     delay: 0
                 });
             }
             //TODO Not on options click
-            game.sound.context.resume();
             this.scene.start("ScenePlay");
         }, this);
         this.scale.on('resize', this.resize, this);
