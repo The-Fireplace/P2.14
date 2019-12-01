@@ -42,6 +42,7 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprFuel8", "resources/Fuel8.png");
         this.load.image("sprFuel9", "resources/Fuel9.png");
         this.load.image("sprSpeedHandle", "resources/SpeedHandle.png");
+        this.load.image("sprPlanet", "resources/planet.png");
         this.load.audio('explosion', 'resources/zapsplat_explosion.mp3');
         this.load.audio('forceFieldOn', 'resources/zapsplat_power_up.mp3');
         this.load.audio('forceFieldOff', 'resources/zapsplat_power_down.mp3');
@@ -219,11 +220,17 @@ class ScenePlay extends Phaser.Scene
            }
         });
 
+        this.planetSpawned = false;
+        this.planetSceneStarted = false;
+
         //Enemy spawning timer
         this.time.addEvent({
             delay: 1000,
             callback: function ()
             {
+                if(this.planetSpawned) {
+                    return;
+                }
                 const enemy = new Asteroid(
                     this,
                     Phaser.Math.Between(0, this.game.scale.width),
@@ -240,6 +247,9 @@ class ScenePlay extends Phaser.Scene
         this.time.addEvent({
             delay: 8000,
             callback: function() {
+                if(this.planetSpawned) {
+                    return;
+                }
                 const battery = new Battery(
                     this,
                     Phaser.Math.Between(0, this.game.scale.width),
@@ -250,6 +260,68 @@ class ScenePlay extends Phaser.Scene
             },
             callbackScope: this,
             loop: true
+        });
+
+        //Planet spawning timer
+        this.time.addEvent({
+            //3 minutes before planet spawn
+            delay: 1000/* * 60*/ * 3,
+            callback: function ()
+            {
+                this.planetSpawned = true;
+                this.planet = new Planet(
+                  this,
+                  this.game.scale.width/2,
+                  -320
+                );
+                this.planet.setDepth(-1);
+                this.time.addEvent({
+                    delay: 6400,
+                    callback: function ()
+                    {
+                        this.planetSceneStarted = true;
+                        this.tweens.add({
+                            targets: this.planet,
+                            y: this.game.scale.height * 0.3,
+                            duration: 4000,
+                            ease: 'Sine.easeInOut',
+                            repeat: 0,
+                            yoyo: false
+                        });
+
+                        this.tweens.add({
+                            targets: this.player,
+                            y: this.game.scale.height * 0.3,
+                            x: this.game.scale.width * 0.5,
+                            duration: 4000,
+                            ease: 'Sine.easeInOut',
+                            repeat: 0,
+                            yoyo: false
+                        });
+
+                        this.time.addEvent({
+                            delay: 4000,
+                            callback: function ()
+                            {
+                                this.planet.scale *= 2;
+                                this.planet.explode(false);
+                                //this.player.explode(false);
+                                this.planet.on('animationcomplete', function ()
+                                {
+                                    this.scene.sndWin.play();
+                                    this.scene.scene.start("SceneGameOver");
+                                }, this.planet);
+                            },
+                            callbackScope: this,
+                            loop: false
+                        })
+                    },
+                    callbackScope: this,
+                    loop: false
+                });
+            },
+            callbackScope: this,
+            loop: false
         });
 
         updateCount = 0;
@@ -338,6 +410,11 @@ class ScenePlay extends Phaser.Scene
             });
         }
     }
+
+    canUseControls() {
+        return this.player.fuel > 0 && !this.planetSceneStarted;
+    }
+
     update()
     {
         for (let i = 0; i < this.backgrounds.length; i++)
@@ -352,7 +429,7 @@ class ScenePlay extends Phaser.Scene
 
         if (!this.player.getData("isDead")) {
             this.player.update();
-            if (this.player.fuel > 0) {
+            if (this.canUseControls()) {
                 //TODO This is where the player controls would go
                 if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown) {
                     this.canMove('y');
