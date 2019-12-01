@@ -1,6 +1,7 @@
 let cockpitHeight = 0;
 let updateCount = 0;
 let moveCount = 0;
+let winLose = 0;
 let sfx = {volume: .3};
 
 class ScenePlay extends Phaser.Scene
@@ -53,6 +54,7 @@ class ScenePlay extends Phaser.Scene
 
     create()
     {
+        winLose = 0;
         this.anims.create({
             key: "explosionAnim",
             frames: this.anims.generateFrameNumbers("explosionAnim"),
@@ -192,7 +194,8 @@ class ScenePlay extends Phaser.Scene
                     enemy.explode(true);
                     player.on('animationcomplete', function ()
                     {
-                        this.scene.sndLose.play();
+                        this.scene.sound.sounds[0].pause();
+                        winLose = -1;
                         this.scene.scene.start("SceneGameOver");
                     }, player);
                 } else
@@ -304,7 +307,8 @@ class ScenePlay extends Phaser.Scene
                                 //this.player.explode(false);
                                 this.planet.on('animationcomplete', function ()
                                 {
-                                    this.scene.sndWin.play();
+                                    this.scene.sound.sounds[0].pause();
+                                    winLose = 1;
                                     this.scene.scene.start("SceneGameOver");
                                 }, this.planet);
                             },
