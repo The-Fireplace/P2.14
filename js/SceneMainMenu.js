@@ -1,5 +1,5 @@
 let bgConfig = {
-    volume: .08,
+    volume: .3,
     loop: true
 };
 class SceneMainMenu extends Phaser.Scene
@@ -15,7 +15,7 @@ class SceneMainMenu extends Phaser.Scene
         this.load.image("sprBtnPlay", "resources/play_button.png");
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
         this.load.image("sprShip", "resources/SpaceShipWFire.png");
-        this.load.image("sprGear", "resources/gear.png");
+        // this.load.image("sprGear", "resources/gear.png");
         this.load.audio('music', 'resources/POL-galactic-chase-short.wav');
     }
 
@@ -58,12 +58,12 @@ class SceneMainMenu extends Phaser.Scene
             "sprLogo"
         );
 
-        this.btnOptions = this.add.sprite(
-            this.game.scale.width - 32,
-            32,
-            "sprGear"
-        );
-        this.btnOptions.scale = 1;
+        // this.btnOptions = this.add.sprite(
+        //     this.game.scale.width - 32,
+        //     32,
+        //     "sprGear"
+        // );
+        // this.btnOptions.scale = 1;
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++) {
@@ -82,7 +82,7 @@ class SceneMainMenu extends Phaser.Scene
                 });
             }
             //TODO Not on options click
-            this.scene.start("ScenePlay");
+            this.scene.start("SceneInstruction");
         }, this);
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
@@ -105,8 +105,8 @@ class SceneMainMenu extends Phaser.Scene
         localScaleManager.scaleSprite(this.btnShip, width/7, height, 0, 1, true);
         this.btnShip.setPosition(width / 2, height * .6 );
 
-        localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
-        this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
+        // localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
+        // this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
 
         localScaleManager.scaleSprite(this.btnLogo, width/1.50, height, 0, 1, true);
         this.btnLogo.setPosition(width / 2, height * 0.25);

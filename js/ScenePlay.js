@@ -1,7 +1,7 @@
 let cockpitHeight = 0;
 let updateCount = 0;
 let moveCount = 0;
-let sfx = {volume: .08};
+let sfx = {volume: .3};
 
 class ScenePlay extends Phaser.Scene
 {
@@ -78,21 +78,16 @@ class ScenePlay extends Phaser.Scene
             this.backgrounds.push(bg);
         }
 
-        this.btnOptions = this.add.sprite(
-            this.game.scale.width - 32,
-            32,
-            "sprGear"
-        ).setInteractive();
-        this.btnOptions.scale = 1;
-        this.btnOptions.setDepth(2);
+        // this.btnOptions = this.add.sprite(
+        //     this.game.scale.width - 32,
+        //     32,
+        //     "sprGear"
+        // ).setInteractive();
+        // this.btnOptions.scale = 1;
+        // this.btnOptions.setDepth(3);
 
-        this.throttle = this.add.sprite(
-            0,
-            0,
-            "sprSpeedHandle"
-        );
-        this.throttle.scale = .5;
-        this.throttle.setDepth(3);
+        this.throttle = this.add.sprite(0, 0, "sprSpeedHandle");
+        this.throttle.setDepth(4);
 
         this.steering = this.add.sprite(
             0,
@@ -100,14 +95,14 @@ class ScenePlay extends Phaser.Scene
             "sprSteeringWheel"
         );
         this.steering.scale = .5;
-        this.steering.setDepth(3);
+        this.steering.setDepth(4);
 
         this.fuel = [];
 
         for (let i = 0; i < 10; i++) {
             this.fuel[i] = this.add.sprite(0, 0, "sprFuel" + i);
             this.fuel[i].scale = .5;
-            this.fuel[i].setDepth(3);
+            this.fuel[i].setDepth(4);
             this.fuel[i].visible = false;
         }
         this.fuel[9].visible = true;
@@ -118,7 +113,7 @@ class ScenePlay extends Phaser.Scene
             "sprShieldBtnUsable"
         );
         this.shieldUseable.scale = .5;
-        this.shieldUseable.setDepth(3);
+        this.shieldUseable.setDepth(4);
 
         this.shieldInUse = this.add.sprite(
             0,
@@ -126,7 +121,7 @@ class ScenePlay extends Phaser.Scene
             "sprShieldBtnInUse"
         );
         this.shieldInUse.scale = .5;
-        this.shieldInUse.setDepth(3);
+        this.shieldInUse.setDepth(4);
         this.shieldInUse.visible = false;
 
         this.shieldNotUse = this.add.sprite(
@@ -135,7 +130,7 @@ class ScenePlay extends Phaser.Scene
             "sprShieldBtnNotUsable"
         );
         this.shieldNotUse.scale = .5;
-        this.shieldNotUse.setDepth(3);
+        this.shieldNotUse.setDepth(4);
         this.shieldNotUse.visible = false;
 
         this.cockPit = this.add.sprite(
@@ -144,7 +139,7 @@ class ScenePlay extends Phaser.Scene
             "sprCockpit"
         );
         this.cockPit.scale = 1;
-        this.cockPit.setDepth(2);
+        this.cockPit.setDepth(3);
         cockpitHeight = this.cockPit.displayHeight;
 
         this.plusFuel = this.add.sprite(
@@ -238,7 +233,7 @@ class ScenePlay extends Phaser.Scene
 
         //Battery spawning timer
         this.time.addEvent({
-            delay: 8000,
+            delay: 15000,
             callback: function() {
                 const battery = new Battery(
                     this,
@@ -265,8 +260,8 @@ class ScenePlay extends Phaser.Scene
         localScaleManager.scaleSprite(this.player, width / 7, height, 0, 1, true);
         this.player.setPosition(width / 2, height * 0.6);
 
-        localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
-        this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
+        // localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
+        // this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
 
         localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
         this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight / 2);
@@ -285,6 +280,12 @@ class ScenePlay extends Phaser.Scene
 
         localScaleManager.scaleSprite(this.shieldUseable, width / 6, height, 0, 1, true);
         this.shieldUseable.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
+
+        localScaleManager.scaleSprite(this.shieldNotUse, width / 6, height, 0, 1, true);
+        this.shieldNotUse.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
+
+        localScaleManager.scaleSprite(this.shieldInUse, width / 6, height, 0, 1, true);
+        this.shieldInUse.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4);
     }
 
     resize(gameSize, baseSize, displaySize, resolution)
@@ -327,8 +328,11 @@ class ScenePlay extends Phaser.Scene
             this.player.fuel -= 50;
             this.ff = new ForceField(this, this.player.x, this.player.y);
             this.ff.setDepth(2);
+            this.shieldUseable.visible = false;
+            this.shieldNotUse.visible = false;
+            this.shieldInUse.visible = true;
             this.time.addEvent({
-                delay: 5000,
+                delay: 4500,
                 callback: function ()
                 {
                     this.ff.powerDown();
@@ -348,7 +352,22 @@ class ScenePlay extends Phaser.Scene
         for (let i = 0; i < 10; i++) {
             this.fuel[i].visible = false;
         }
-        this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
+
+        if (this.player.fuel > 0)
+            this.fuel[parseInt(Math.ceil(this.player.fuel/10) - 1, 10)].visible = true;
+        else
+            this.fuel[0].visible = true;
+
+        if (this.player.fuel < 50 && this.ff == null) {
+            this.shieldUseable.visible = false;
+            this.shieldInUse.visible = false;
+            this.shieldNotUse.visible = true;
+        }
+        else if (this.player.fuel >= 50 && this.ff == null) {
+            this.shieldNotUse.visible = false;
+            this.shieldInUse.visible = false;
+            this.shieldUseable.visible = true;
+        }
 
         if (!this.player.getData("isDead")) {
             this.player.update();
@@ -371,7 +390,7 @@ class ScenePlay extends Phaser.Scene
                 }
 
                 this.shieldUseable.on('pointerdown', function (pointer) {
-                    this.scene.activateForceField();
+                    this.activateForceField();
                 });
 
                 if (moveCount >= 40) {
