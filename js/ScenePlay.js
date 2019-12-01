@@ -46,6 +46,7 @@ class ScenePlay extends Phaser.Scene
         this.load.audio('forceFieldOff', 'resources/zapsplat_power_down.mp3');
         this.load.audio('lose', 'resources/zapsplat_lose.mp3');
         this.load.audio('win', 'resources/zapsplat_fanfare.mp3');
+        this.load.audio('charge', 'resources/zapsplat_charge.mp3');
     }
 
     create()
@@ -67,6 +68,7 @@ class ScenePlay extends Phaser.Scene
         this.sndForceFieldOff = this.sound.add('forceFieldOff');
         this.sndLose = this.sound.add('lose');
         this.sndWin = this.sound.add('win');
+        this.sndCharge = this.sound.add('charge');
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++)
@@ -211,6 +213,7 @@ class ScenePlay extends Phaser.Scene
                else {
                    player.scene.player.fuel += 30;
                }
+               player.scene.sndCharge.play();
                battery.batteryExplode(true);
            }
         });
