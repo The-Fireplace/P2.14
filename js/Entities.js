@@ -54,18 +54,25 @@ class Entity extends Phaser.GameObjects.Sprite
             this.scale = 1.5;
             this.scene.tweens.add({
                 targets: this,
-                alpha: {value: 0, duration: 2000, ease: 'Power1', delay: 1000},
+                alpha: {value: 0, duration: 1500, ease: 'Power1', delay: 1500},
                 yoyo: false,
                 loop: false
             });
 
-            this.setAngle(0);
             this.body.setVelocity(0, 0);
 
-            if (canDestroy)
-            {
-                this.destroy();
-            }
+            this.scene.time.addEvent({
+                delay: 3000,
+                callback: function() {
+                    if (canDestroy)
+                    {
+                        this.destroy();
+                    }
+                },
+                callbackScope: this,
+                loop: false
+            });
+
 
             this.setData("isDead", true);
         }
