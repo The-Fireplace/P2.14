@@ -22,7 +22,8 @@ class SceneMainMenu extends Phaser.Scene
     create()
     {
         //Do it this way so music doesn't get created again every time you end up on the main menu
-        if(this.music == null) {
+        if (this.music == null)
+        {
             this.music = this.sound.add('music');
             const loopMarker = {
                 name: 'loop',
@@ -32,7 +33,8 @@ class SceneMainMenu extends Phaser.Scene
             };
             this.music.addMarker(loopMarker);
         }
-        if(!this.music.isPlaying) {
+        if (!this.music.isPlaying)
+        {
             this.music.play('loop', {
                 delay: 0
             });
@@ -66,7 +68,8 @@ class SceneMainMenu extends Phaser.Scene
         this.btnOptions.scale = 1;
 
         this.backgrounds = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++)
+        {
             const keys = ["sprBg"];
             const key = keys[Phaser.Math.Between(0, keys.length - 1)];
             const bg = new ScrollingBackground(this, key, i * 10);
@@ -76,7 +79,8 @@ class SceneMainMenu extends Phaser.Scene
         this.input.on('pointerdown', function (pointer)
         {
             game.sound.context.resume();
-            if(!this.music.isPlaying) {
+            if (!this.music.isPlaying)
+            {
                 this.music.play({
                     delay: 0
                 });
@@ -98,21 +102,23 @@ class SceneMainMenu extends Phaser.Scene
         }
     }
 
-    positionControls(width, height) {
-        localScaleManager.scaleSprite(this.btnPlay, width/2.15, height, 0, 1, true);
+    positionControls(width, height)
+    {
+        localScaleManager.scaleSprite(this.btnPlay, width / 2.15, height, 0, 1, true);
         this.btnPlay.setPosition(width / 2, height * 0.825);
 
-        localScaleManager.scaleSprite(this.btnShip, width/7, height, 0, 1, true);
-        this.btnShip.setPosition(width / 2, height * .6 );
+        localScaleManager.scaleSprite(this.btnShip, width / 7, height, 0, 1, true);
+        this.btnShip.setPosition(width / 2, height * .6);
 
         localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
         this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
 
-        localScaleManager.scaleSprite(this.btnLogo, width/1.50, height, 0, 1, true);
+        localScaleManager.scaleSprite(this.btnLogo, width / 1.50, height, 0, 1, true);
         this.btnLogo.setPosition(width / 2, height * 0.25);
     }
 
-    resize(gameSize, baseSize, displaySize, resolution) {
+    resize(gameSize, baseSize, displaySize, resolution)
+    {
         let width = gameSize.width;
         let height = gameSize.height;
 
