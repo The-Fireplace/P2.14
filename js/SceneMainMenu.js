@@ -67,9 +67,9 @@ class SceneMainMenu extends Phaser.Scene
 
         this.backgrounds = [];
         for (let i = 0; i < 3; i++) {
-            const keys = ["sprBg"];
-            const key = keys[Phaser.Math.Between(0, keys.length - 1)];
-            const bg = new ScrollingBackground(this, key, i * 10);
+            //const keys = ["sprBg"];
+            //const key = keys[Phaser.Math.Between(0, keys.length - 1)];
+            const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
 
