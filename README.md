@@ -30,10 +30,4 @@
 
 - Similarities with the ship and ship's dashboard to associate the two.
 
-### Curent Status
-
-Some of the artwork is done and concepts have been laid out in order to progress.
-
-### The Future Plan
-
-Programming the game and correctly placing all artwork on the screen to work together and in different aspect ratios.
+### 
