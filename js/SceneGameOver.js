@@ -6,7 +6,8 @@ class SceneGameOver extends Phaser.Scene {
     preload()
     {
         this.load.image("sprBtnContinue", "resources/touch_to_continue.png");
-        this.load.image("sprGameOver", "resources/game_over.png");
+        this.load.image("sprGameFailed", "resources/DeliveryFailed.png");
+        this.load.image("sprGameSuccess", "resources/DeliverySuccess.png");
     }
 
     create() {
@@ -16,18 +17,12 @@ class SceneGameOver extends Phaser.Scene {
             const bg = new ScrollingBackground(this, "sprBg", i * 10);
             this.backgrounds.push(bg);
         }
-        this.btnContinue = this.add.sprite(
-          this.game.scale.width * 0.5,
-          this.game.scale.height * 0.75,
-          "sprBtnContinue"
-        );
+        this.btnContinue = this.add.sprite(0, 0, "sprBtnContinue");
         this.btnContinue.scale = 1.5;
 
-        this.btnGameOver = this.add.sprite(
-          this.game.scale.width * 0.5,
-          this.game.scale.height * 0.3,
-          "sprGameOver"
-        );
+        this.deliverySucc = this.add.sprite(0, 0, "sprGameSuccess");
+
+        this.deliveryFail = this.add.sprite(0, 0, "sprGameFailed");
 
         this.input.on('pointerdown', function (pointer)
         {
@@ -40,10 +35,12 @@ class SceneGameOver extends Phaser.Scene {
 
 
         if (winLose == 1) {
+            this.deliveryFail.visible = false;
             //win sound from sceneplay
             this.game.sound.sounds[5].play();
         }
         else if (winLose == -1) {
+            this.deliverySucc.visible = false;
             //lose sound from sceneplay
             this.game.sound.sounds[4].play();
         }
@@ -59,8 +56,11 @@ class SceneGameOver extends Phaser.Scene {
         localScaleManager.scaleSprite(this.btnContinue, width/2.15, height, 0, 1, true);
         this.btnContinue.setPosition(width / 2, height * 0.825);
 
-        localScaleManager.scaleSprite(this.btnGameOver, width/1.50, height, 0, 1, true);
-        this.btnGameOver.setPosition(width / 2, height * 0.25);
+        localScaleManager.scaleSprite(this.deliverySucc, width/1.22, height, 0, 1, true);
+        this.deliverySucc.setPosition(width / 2, height * 0.255);
+
+        localScaleManager.scaleSprite(this.deliveryFail, width/1.22, height, 0, 1, true);
+        this.deliveryFail.setPosition(width / 2, height * 0.255);
     }
 
     resize(gameSize, baseSize, displaySize, resolution) {
