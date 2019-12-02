@@ -89,20 +89,54 @@ class ScenePlay extends Phaser.Scene
         // this.btnOptions.scale = 1;
         // this.btnOptions.setDepth(3);
 
-        this.throttle = this.add.sprite(0, 0, "sprSpeedHandle");
-        this.throttle.setDepth(4);
+        this.throttle = this.add.sprite(
+            0,
+            0,
+            "sprSpeedHandle"
+        );
+        this.throttle.scale = .5;
+        this.throttle.setDepth(3);
+        this.throttle.setInteractive();
+        this.throttle.position = "static";
+        this.input.setDraggable(this.throttle);
+        this.input.dragDistanceThreshold = 30;
+        this.throttle.dragged = false;
+        this.throttle.on('drag', function (pointer)
+        {
+            this.scene.throttle.pointer = pointer;
+            this.dragged = true;
+        });
+        this.input.on('pointerup', function (pointer)
+        {
+            this.scene.throttle.dragged = false;
+        });
 
         this.steering = this.add.sprite(
             0,
             0,
             "sprSteeringWheel"
         );
+        this.steering.position = "static";
         this.steering.scale = .5;
-        this.steering.setDepth(4);
+        this.steering.setInteractive();
+        this.steering.setDepth(3);
+        this.input.setDraggable(this.steering);
+        this.input.dragDistanceThreshold = 30;
+        this.steering.dragged = false;
+        this.steering.on('drag', function (pointer)
+        {
+            this.scene.steering.pointer = pointer;
+            this.dragged = true;
+        });
+        this.input.on('pointerup', function (pointer)
+        {
+            this.scene.steering.dragged = false;
+        });
 
         this.fuel = [];
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++)
+        {
             this.fuel[i] = this.add.sprite(0, 0, "sprFuel" + i);
             this.fuel[i].scale = .5;
             this.fuel[i].setDepth(4);
@@ -116,7 +150,12 @@ class ScenePlay extends Phaser.Scene
             "sprShieldBtnUsable"
         );
         this.shieldUseable.scale = .5;
-        this.shieldUseable.setDepth(4);
+        this.shieldUseable.setDepth(3);
+        this.shieldUseable.setInteractive();
+        this.shieldUseable.on('pointerdown', function (pointer)
+        {
+            this.scene.activateForceField();
+        });
 
         this.shieldInUse = this.add.sprite(
             0,
@@ -176,6 +215,7 @@ class ScenePlay extends Phaser.Scene
         this.keyNum6 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX);
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.pointer = this.input.activePointer;
+        this.input.addPointer(2);
 
         this.ff = null;
 
@@ -205,17 +245,21 @@ class ScenePlay extends Phaser.Scene
             }
         });
 
-        this.physics.add.overlap(this.player, this.batteries, function (player, battery) {
-           if (!player.getData("isDead") && !battery.getData("isDead")) {
-               if (player.scene.player.fuel + 30 > 100) {
-                   player.scene.player.fuel = 100;
-               }
-               else {
-                   player.scene.player.fuel += 30;
-               }
-               player.scene.sndCharge.play();
-               battery.batteryExplode(true);
-           }
+        this.physics.add.overlap(this.player, this.batteries, function (player, battery)
+        {
+            if (!player.getData("isDead") && !battery.getData("isDead"))
+            {
+                if (player.scene.player.fuel + 30 > 100)
+                {
+                    player.scene.player.fuel = 100;
+                }
+                else
+                {
+                    player.scene.player.fuel += 30;
+                }
+                player.scene.sndCharge.play();
+                battery.batteryExplode(true);
+            }
         });
 
         this.planetSpawned = false;
@@ -226,7 +270,8 @@ class ScenePlay extends Phaser.Scene
             delay: 1000,
             callback: function ()
             {
-                if(this.planetSpawned) {
+                if (this.planetSpawned)
+                {
                     return;
                 }
                 const enemy = new Asteroid(
@@ -276,9 +321,9 @@ class ScenePlay extends Phaser.Scene
             {
                 this.planetSpawned = true;
                 this.planet = new Planet(
-                  this,
-                  this.game.scale.width/2,
-                  -320
+                    this,
+                    this.game.scale.width / 2,
+                    -320
                 );
                 this.planet.setDepth(-1);
                 this.time.addEvent({
@@ -355,9 +400,10 @@ class ScenePlay extends Phaser.Scene
         this.steering.setPosition(width * .22, height + 2 - this.cockPit.displayHeight / 2);
 
         localScaleManager.scaleSprite(this.throttle, width / 7.5, height, 0, 1, true);
-        this.throttle.setPosition(width * .725, height - this.cockPit.displayHeight / 2);
+        this.throttle.setPosition(width * .72, height - this.cockPit.displayHeight / 2);
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++)
+        {
             localScaleManager.scaleSprite(this.fuel[i], width / 5, height, 0, 1, true);
             this.fuel[i].setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
         }
@@ -381,25 +427,32 @@ class ScenePlay extends Phaser.Scene
         this.positionControls(width, height);
     }
 
-    canMove(input) {
+    canMove(input)
+    {
         let moveX = true;
         let moveY = true;
-        if (this.player.x >= this.game.scale.width || this.player.x <= 0) {
+        if (this.player.x >= this.game.scale.width || this.player.x <= 0)
+        {
             moveX = false;
         }
-        if (this.player.y >= this.game.scale.height - cockpitHeight || this.player.y <= 0) {
+        if (this.player.y >= this.game.scale.height - cockpitHeight || this.player.y <= 0)
+        {
             moveY = false;
         }
-        if (moveX && moveY) {
-            moveCount +=1;
+        if (moveX && moveY)
+        {
+            moveCount += 1;
         }
-        else if (!moveX && !moveY){
+        else if (!moveX && !moveY)
+        {
         }
-        else if (!moveX && input == 'y'){
-            moveCount +=1;
+        else if (!moveX && input == 'y')
+        {
+            moveCount += 1;
         }
-        else if (!moveY && input == 'x'){
-            moveCount +=1;
+        else if (!moveY && input == 'x')
+        {
+            moveCount += 1;
         }
 
     }
@@ -409,6 +462,13 @@ class ScenePlay extends Phaser.Scene
         if (this.player.fuel > 50)
         {
             //Activate forcefield
+            this.shieldUseable.visible = false;
+            this.shieldNotUse.visible = false;
+            localScaleManager.scaleSprite(this.shieldNotUse, this.game.scale.width / 6, this.game.scale.height, 0, 1, true);
+            this.shieldNotUse.setPosition(this.game.scale.width * .50, this.game.scale.height - 5 - this.cockPit.displayHeight / 4)
+            this.shieldInUse.visible = true;
+            localScaleManager.scaleSprite(this.shieldInUse, this.game.scale.width / 6, this.game.scale.height, 0, 1, true);
+            this.shieldInUse.setPosition(this.game.scale.width * .50, this.game.scale.height - 5 - this.cockPit.displayHeight / 4);
             this.player.fuel -= 50;
             this.ff = new ForceField(this, this.player.x, this.player.y);
             this.ff.setDepth(2);
@@ -427,7 +487,22 @@ class ScenePlay extends Phaser.Scene
         }
     }
 
-    canUseControls() {
+    shieldIsUsable()
+    {
+        this.shieldNotUse.visible = false;
+        this.shieldInUse.visible = false;
+        this.shieldIsUsable.visible = true;
+    }
+
+    shieldIsNotUsable()
+    {
+        this.shieldInUse.visible = false;
+        this.shieldIsUsable.visible = false;
+        this.shieldNotUse.visible = false;
+    }
+
+    canUseControls()
+    {
         return this.player.fuel > 0 && !this.planetSceneStarted;
     }
 
@@ -438,7 +513,8 @@ class ScenePlay extends Phaser.Scene
             this.backgrounds[i].update();
         }
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++)
+        {
             this.fuel[i].visible = false;
         }
 
@@ -460,39 +536,81 @@ class ScenePlay extends Phaser.Scene
 
         if (!this.player.getData("isDead")) {
             this.player.update();
-            if (this.canUseControls()) {
+            if (this.canUseControls())
+            {
+                this.steering.position = "static";
+                this.throttle.position = "static";
                 //TODO This is where the player controls would go
-                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown) {
+                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown || this.throttle.dragged && (this.throttle.pointer.y < this.throttle.y))
+                {
                     this.canMove('y');
+                    if (this.throttle.position != "up")
+                    {
+                        this.throttle.position = "up";
+                        this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 1.5);
+                    }
                     this.player.moveUp();
-                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown) {
+                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown || this.throttle.dragged && (this.throttle.pointer.y > this.throttle.y))
+                {
                     this.canMove('y');
+                    if (this.throttle.position != "down")
+                    {
+                        this.throttle.position = "down";
+                        this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 3);
+                    }
                     this.player.moveDown();
                 }
 
-                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown) {
+                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown || this.steering.dragged && (this.steering.pointer.x < this.steering.x))
+                {
                     this.canMove('x');
+                    if (this.steering.position != "left")
+                    {
+                        this.steering.position = "left";
+                        this.steering.angle = -45;
+                    }
                     this.player.moveLeft();
-                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown) {
+                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown || this.steering.dragged && (this.steering.pointer.x > this.steering.x))
+                {
                     this.canMove('x');
+                    if (this.steering.position != "right")
+                    {
+                        this.steering.position = "right";
+                        this.steering.angle = 45;
+                    }
                     this.player.moveRight();
                 }
-
-                this.shieldUseable.on('pointerdown', function (pointer) {
-                    this.scene.activateForceField();
-                });
-
-                if (moveCount >= 40) {
+                if (moveCount >= 40)
+                {
                     this.player.fuel -= 1;
                     moveCount = 0;
                 }
-                if(this.shieldUseable.visible && this.keySpace.isDown) {
+                if (this.shieldUseable.visible && this.keySpace.isDown)
+                {
                     this.activateForceField();
                 }
 
-                if (this.ff != null) {
+                if (this.ff != null)
+                {
                     this.ff.x = this.player.x;
                     this.ff.y = this.player.y;
+                }
+                if (this.steering.position == "static")
+                {
+                    this.steering.angle = 0;
+                }
+                if (this.throttle.position == "static")
+                {
+                    this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 2);
+                }
+
+                if (this.fuel > 50)
+                {
+                    this.shieldIsUsable();
+                }
+                else if (this.fuel < 50)
+                {
+                    this.shieldIsNotUsable();
                 }
             }
         }
@@ -546,7 +664,8 @@ class ScenePlay extends Phaser.Scene
 
             }
         }
-        if (updateCount % 300 === 0 && this.player.fuel > 0) {
+        if (updateCount % 300 === 0 && this.player.fuel > 0)
+        {
             updateCount = 0;
             this.player.fuel -= 1;
         }

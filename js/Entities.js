@@ -54,7 +54,7 @@ class Entity extends Phaser.GameObjects.Sprite
             this.scale = 1.5;
             this.scene.tweens.add({
                 targets: this,
-                alpha: {value: 0, duration: 1500, ease: 'Power1', delay: 1500},
+                alpha: { value: 0, duration: 1500, ease: 'Power1', delay: 1500 },
                 yoyo: false,
                 loop: false
             });
@@ -63,7 +63,8 @@ class Entity extends Phaser.GameObjects.Sprite
 
             this.scene.time.addEvent({
                 delay: 3000,
-                callback: function() {
+                callback: function ()
+                {
                     if (canDestroy)
                     {
                         this.destroy();
@@ -192,7 +193,8 @@ class ForceField extends Entity
         }, this);
     }
 
-    powerDown() {
+    powerDown()
+    {
         this.setTexture("forceFieldGrowingAnim");
         this.anims.playReverse("forceFieldGrowingAnim", true);
 
@@ -201,6 +203,8 @@ class ForceField extends Entity
         this.on('animationcomplete', function ()
         {
             this.scene.ff = null;
+            this.scene.shieldInUse.visible = false;
+            this.scene.shieldNotUse.visible = true;
             this.destroy();
         }, this);
     }
