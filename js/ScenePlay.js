@@ -236,6 +236,12 @@ class ScenePlay extends Phaser.Scene
                 );
                 enemy.scale = 0.15 + Phaser.Math.Between(0, 20)/100;
                 enemy.rotation = Phaser.Math.Between(0, 359);
+                if (Phaser.Math.Between(0,1) === 1) {
+                    enemy.flipX = true;
+                }
+                if (Phaser.Math.Between(0,1) === 1) {
+                    enemy.flipY = true;
+                }
                 this.enemies.add(enemy);
             },
             callbackScope: this,
@@ -262,9 +268,10 @@ class ScenePlay extends Phaser.Scene
         });
 
         //Planet spawning timer
+        let delay = 90000 + Phaser.Math.Between(0, 120)*1000;
         this.time.addEvent({
             //3 minutes before planet spawn
-            delay: 1000/* * 60*/ * 3,
+            delay: delay,
             callback: function ()
             {
                 this.planetSpawned = true;
