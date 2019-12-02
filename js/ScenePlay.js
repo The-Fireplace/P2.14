@@ -94,8 +94,7 @@ class ScenePlay extends Phaser.Scene
             0,
             "sprSpeedHandle"
         );
-        this.throttle.scale = .5;
-        this.throttle.setDepth(3);
+        this.throttle.setDepth(4);
         this.throttle.setInteractive();
         this.throttle.position = "static";
         this.input.setDraggable(this.throttle);
@@ -120,9 +119,8 @@ class ScenePlay extends Phaser.Scene
             "sprSteeringWheel"
         );
         this.steering.position = "static";
-        this.steering.scale = .5;
         this.steering.setInteractive();
-        this.steering.setDepth(3);
+        this.steering.setDepth(4);
         this.input.setDraggable(this.steering);
         this.input.dragDistanceThreshold = 30;
         this.steering.dragged = false;
@@ -156,7 +154,7 @@ class ScenePlay extends Phaser.Scene
             "sprShieldBtnUsable"
         );
         this.shieldUseable.scale = .5;
-        this.shieldUseable.setDepth(3);
+        this.shieldUseable.setDepth(4);
         this.shieldUseable.setInteractive();
         this.shieldUseable.on('pointerdown', function (pointer)
         {
@@ -319,10 +317,10 @@ class ScenePlay extends Phaser.Scene
         });
 
         //Planet spawning timer
-        let delay = 90000 + Phaser.Math.Between(0, 120)*1000;
+        let gameTime = 90000 + Phaser.Math.Between(0, 120)*1000;
         this.time.addEvent({
             //3 minutes before planet spawn
-            delay: delay,
+            delay: gameTime,
             callback: function ()
             {
                 this.planetSpawned = true;
@@ -468,19 +466,9 @@ class ScenePlay extends Phaser.Scene
         if (this.player.fuel > 50)
         {
             //Activate forcefield
-            this.shieldUseable.visible = false;
-            this.shieldNotUse.visible = false;
-            localScaleManager.scaleSprite(this.shieldNotUse, this.game.scale.width / 6, this.game.scale.height, 0, 1, true);
-            this.shieldNotUse.setPosition(this.game.scale.width * .50, this.game.scale.height - 5 - this.cockPit.displayHeight / 4)
-            this.shieldInUse.visible = true;
-            localScaleManager.scaleSprite(this.shieldInUse, this.game.scale.width / 6, this.game.scale.height, 0, 1, true);
-            this.shieldInUse.setPosition(this.game.scale.width * .50, this.game.scale.height - 5 - this.cockPit.displayHeight / 4);
             this.player.fuel -= 50;
             this.ff = new ForceField(this, this.player.x, this.player.y);
             this.ff.setDepth(2);
-            this.shieldUseable.visible = false;
-            this.shieldNotUse.visible = false;
-            this.shieldInUse.visible = true;
             this.time.addEvent({
                 delay: 4500,
                 callback: function ()
@@ -491,20 +479,6 @@ class ScenePlay extends Phaser.Scene
                 loop: false
             });
         }
-    }
-
-    shieldIsUsable()
-    {
-        this.shieldNotUse.visible = false;
-        this.shieldInUse.visible = false;
-        this.shieldIsUsable.visible = true;
-    }
-
-    shieldIsNotUsable()
-    {
-        this.shieldInUse.visible = false;
-        this.shieldIsUsable.visible = false;
-        this.shieldNotUse.visible = false;
     }
 
     canUseControls()
@@ -608,15 +582,6 @@ class ScenePlay extends Phaser.Scene
                 if (this.throttle.position == "static")
                 {
                     this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 2);
-                }
-
-                if (this.fuel > 50)
-                {
-                    this.shieldIsUsable();
-                }
-                else if (this.fuel < 50)
-                {
-                    this.shieldIsNotUsable();
                 }
             }
         }
