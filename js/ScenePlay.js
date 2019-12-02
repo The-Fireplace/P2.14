@@ -328,6 +328,10 @@ class ScenePlay extends Phaser.Scene
                     callback: function ()
                     {
                         this.planetSceneStarted = true;
+                        if(this.ff != null) {
+                            this.ff.destroy();
+                            this.ff = null;
+                        }
                         this.tweens.add({
                             targets: this.planet,
                             y: this.game.scale.height * 0.3,
@@ -472,7 +476,10 @@ class ScenePlay extends Phaser.Scene
                 delay: 5000,
                 callback: function ()
                 {
-                    this.ff.powerDown();
+                    //Check if the forcefield is not null because the endgame may have already terminated it.
+                    if(this.ff != null) {
+                        this.ff.powerDown();
+                    }
                 },
                 callbackScope: this,
                 loop: false
