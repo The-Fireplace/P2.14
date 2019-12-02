@@ -34,7 +34,7 @@
 
 ### Library used
 
-- Phaser 3 a Javascript library.
+- Phaser 3 (a Javascript library)
 
 ### Game and Task description
 
