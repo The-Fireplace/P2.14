@@ -106,6 +106,9 @@ class ScenePlay extends Phaser.Scene
         });
         this.input.on('pointerup', function (pointer)
         {
+            if(this.scene.throttle.pointer === pointer) {
+                this.scene.throttle.pointer = null;
+            }
             this.scene.throttle.dragged = false;
         });
 
@@ -128,6 +131,9 @@ class ScenePlay extends Phaser.Scene
         });
         this.input.on('pointerup', function (pointer)
         {
+            if(this.scene.steering.pointer === pointer) {
+                this.scene.steering.pointer = null;
+            }
             this.scene.steering.dragged = false;
         });
 
