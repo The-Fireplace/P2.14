@@ -60,14 +60,16 @@ class SceneInstruction extends Phaser.Scene {
     }
 
     positionControls(width, height) {
-        localScaleManager.scaleSprite(this.btnPlay, width/2.15, height, 0, 1, true);
-        this.btnPlay.setPosition(width / 2, height * 0.825);
+
 
         localScaleManager.scaleSprite(this.btnShip, width/7, height, 0, 1, true);
         this.btnShip.setPosition(width / 2, height * .6 );
 
         localScaleManager.scaleSprite(this.cockPit, width, height, 0, 1, true);
         this.cockPit.setPosition(width * .5, height - this.cockPit.displayHeight / 2);
+
+        localScaleManager.scaleSprite(this.btnPlay, width/2.15, height, 0, 1, true);
+        this.btnPlay.setPosition(width / 2, (height - this.cockPit.displayHeight) * 0.95);
 
         localScaleManager.scaleSprite(this.asteroid, width/6, height, 0, 1, true);
         this.asteroid.setPosition(width * .2, height *.4);
@@ -87,11 +89,6 @@ class SceneInstruction extends Phaser.Scene {
         localScaleManager.scaleSprite(this.fuel, width / 5, height, 0, 1, true);
         this.fuel.setPosition(width * .49, height - 5 - this.cockPit.displayHeight / 4 - this.cockPit.displayHeight / 2);
 
-        // localScaleManager.scaleSprite(this.btnOptions, width / 14, height, 0, 1, true);
-        // this.btnOptions.setPosition((width - this.btnOptions.displayWidth / 2) - 1 * this.btnOptions.scale, this.btnOptions.displayHeight / 2 + 1 * this.btnOptions.scale);
-
-        // localScaleManager.scaleSprite(this.btnLogo, width/1.50, height, 0, 1, true);
-        // this.btnLogo.setPosition(width / 2, height * 0.25);
     }
 
     resize(gameSize, baseSize, displaySize, resolution) {
