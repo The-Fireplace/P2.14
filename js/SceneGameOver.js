@@ -37,6 +37,16 @@ class SceneGameOver extends Phaser.Scene {
         let gameWidth = this.cameras.main.width;
         let gameHeight = this.cameras.main.height;
         this.positionControls(gameWidth, gameHeight);
+
+
+        if (winLose == 1) {
+            //win sound from sceneplay
+            this.game.sound.sounds[5].play();
+        }
+        else if (winLose == -1) {
+            //lose sound from sceneplay
+            this.game.sound.sounds[4].play();
+        }
     }
 
     update() {
