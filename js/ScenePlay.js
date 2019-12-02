@@ -512,7 +512,7 @@ class ScenePlay extends Phaser.Scene
                 this.steering.position = "static";
                 this.throttle.position = "static";
                 //TODO This is where the player controls would go
-                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown || this.pointer2.isDown && this.throttle.dragged && (this.pointer2.y < this.throttle.y))
+                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown || this.throttle.dragged && (this.input.pointer2.y < this.throttle.y))
                 {
                     this.canMove('y');
                     if (this.throttle.position != "up")
@@ -521,7 +521,7 @@ class ScenePlay extends Phaser.Scene
                         this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 1.5);
                     }
                     this.player.moveUp();
-                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown || this.pointer2.isDown && this.throttle.dragged && (this.pointer2.y > this.throttle.y))
+                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown || this.throttle.dragged && (this.input.pointer2.y > this.throttle.y))
                 {
                     this.canMove('y');
                     if (this.throttle.position != "down")
@@ -532,7 +532,7 @@ class ScenePlay extends Phaser.Scene
                     this.player.moveDown();
                 }
 
-                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown || this.pointer1.isDown && this.steering.dragged && (this.pointer1.x < this.steering.x))
+                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown || this.steering.dragged && (this.input.pointer1.x < this.steering.x))
                 {
                     this.canMove('x');
                     if (this.steering.position != "left")
@@ -541,7 +541,7 @@ class ScenePlay extends Phaser.Scene
                         this.steering.angle = -45;
                     }
                     this.player.moveLeft();
-                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown || this.pointer1.isDown && this.steering.dragged && (this.pointer1.x > this.steering.x))
+                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown || this.steering.dragged && (this.input.pointer1.x > this.steering.x))
                 {
                     this.canMove('x');
                     if (this.steering.position != "right")
