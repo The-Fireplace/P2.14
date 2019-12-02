@@ -9,6 +9,7 @@ const config = {
     },
     scene: [
         SceneMainMenu,
+        SceneInstruction,
         ScenePlay,
         SceneGameOver
     ],

@@ -4,15 +4,17 @@
 
 [Readme](https://the-fireplace.github.io/P2.14)
 
+[Demo Link](https://the-fireplace.github.io/P2.14/demo.html)
+
 ### Team member and duties
 
 ![Group Photo](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/group_photo.png)
 
-- Rick Trevino - Sketch Designer
+- Rick Trevino - Artist, Touch screen control, Programmer
 
-- Lance Gable - Leader, Sketch Designer
+- Lance Gable - Leader, Backend logic, Programmer
 
-- Michael Bishop - Sketch Presentation 
+- Michael Bishop - Presentation creation, Scaling, Programmer
 
 ### Sketch UI and Main Functions
 
@@ -30,10 +32,18 @@
 
 - Similarities with the ship and ship's dashboard to associate the two.
 
-### Curent Status
+### Library used
 
-Some of the artwork is done and concepts have been laid out in order to progress.
+- Phaser 3 a Javascript library.
 
-### The Future Plan
+### Game and Task description
 
-Programming the game and correctly placing all artwork on the screen to work together and in different aspect ratios.
+- [Demo Link](https://the-fireplace.github.io/P2.14/demo.html)
+
+![QR](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/demo_qr.png)
+
+- Fly through space to reach the end goal without crashing.
+
+- Hypothesis: 
+
+  - The User will be able to complete the game within 5 tries with the current controls. 
