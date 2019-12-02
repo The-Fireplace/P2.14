@@ -99,11 +99,12 @@ class ScenePlay extends Phaser.Scene
         this.input.setDraggable(this.throttle);
         this.input.dragDistanceThreshold = 30;
         this.throttle.dragged = false;
-        this.throttle.on('drag', function ()
+        this.throttle.on('drag', function (pointer)
         {
+            this.scene.throttle.pointer = pointer;
             this.dragged = true;
         });
-        this.input.on('pointerup', function ()
+        this.input.on('pointerup', function (pointer)
         {
             this.scene.throttle.dragged = false;
         });
@@ -120,11 +121,12 @@ class ScenePlay extends Phaser.Scene
         this.input.setDraggable(this.steering);
         this.input.dragDistanceThreshold = 30;
         this.steering.dragged = false;
-        this.steering.on('drag', function ()
+        this.steering.on('drag', function (pointer)
         {
+            this.scene.steering.pointer = pointer;
             this.dragged = true;
         });
-        this.input.on('pointerup', function ()
+        this.input.on('pointerup', function (pointer)
         {
             this.scene.steering.dragged = false;
         });
@@ -151,7 +153,7 @@ class ScenePlay extends Phaser.Scene
         this.shieldUseable.on('pointerdown', function (pointer)
         {
             this.scene.activateForceField();
-        })
+        });
 
         this.shieldInUse = this.add.sprite(
             0,
@@ -512,7 +514,7 @@ class ScenePlay extends Phaser.Scene
                 this.steering.position = "static";
                 this.throttle.position = "static";
                 //TODO This is where the player controls would go
-                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown || this.throttle.dragged && (this.pointer.y < this.throttle.y))
+                if (this.keyW.isDown || this.keyUp.isDown || this.keyNum8.isDown || this.throttle.dragged && (this.throttle.pointer.y < this.throttle.y))
                 {
                     this.canMove('y');
                     if (this.throttle.position != "up")
@@ -521,7 +523,7 @@ class ScenePlay extends Phaser.Scene
                         this.throttle.setPosition(this.game.scale.width * .72, this.game.scale.height - this.cockPit.displayHeight / 1.5);
                     }
                     this.player.moveUp();
-                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown || this.throttle.dragged && (this.pointer.y > this.throttle.y))
+                } else if (this.keyS.isDown || this.keyDown.isDown || this.keyNum5.isDown || this.throttle.dragged && (this.throttle.pointer.y > this.throttle.y))
                 {
                     this.canMove('y');
                     if (this.throttle.position != "down")
@@ -532,7 +534,7 @@ class ScenePlay extends Phaser.Scene
                     this.player.moveDown();
                 }
 
-                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown || this.steering.dragged && (this.pointer.x < this.steering.x))
+                if (this.keyA.isDown || this.keyLeft.isDown || this.keyNum4.isDown || this.steering.dragged && (this.steering.pointer.x < this.steering.x))
                 {
                     this.canMove('x');
                     if (this.steering.position != "left")
@@ -541,7 +543,7 @@ class ScenePlay extends Phaser.Scene
                         this.steering.angle = -45;
                     }
                     this.player.moveLeft();
-                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown || this.steering.dragged && (this.pointer.x > this.steering.x))
+                } else if (this.keyD.isDown || this.keyRight.isDown || this.keyNum6.isDown || this.steering.dragged && (this.steering.pointer.x > this.steering.x))
                 {
                     this.canMove('x');
                     if (this.steering.position != "right")
