@@ -14,7 +14,10 @@ class SceneMainMenu extends Phaser.Scene
         this.load.image("sprBg", "resources/background.png");
         this.load.image("sprBtnPlay", "resources/play_button.png");
         this.load.image("sprLogo", "resources/SPACIALDELIVERY-1.png");
-        this.load.image("sprShip", "resources/SpaceShipWFire.png");
+        this.load.spritesheet("sprShip", "resources/shipAnimated.png", {
+            frameWidth: 32,
+            frameHeight: 32,
+        });
         this.load.image("sprGear", "resources/gear.png");
         this.load.audio('music', 'resources/POL-galactic-chase-short.wav');
     }
@@ -68,10 +71,11 @@ class SceneMainMenu extends Phaser.Scene
         this.btnOptions.scale = 1;
 
         this.backgrounds = [];
-        for (let i = 0; i < 3; i++) {
-            //const keys = ["sprBg"];
-            //const key = keys[Phaser.Math.Between(0, keys.length - 1)];
-            const bg = new ScrollingBackground(this, "sprBg", i * 10);
+        for (let i = 0; i < 3; i++)
+        {
+            const keys = ["sprBg"];
+            const key = keys[Phaser.Math.Between(0, keys.length - 1)];
+            const bg = new ScrollingBackground(this, key, i * 10);
             this.backgrounds.push(bg);
         }
 

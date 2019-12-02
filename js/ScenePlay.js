@@ -17,7 +17,10 @@ class ScenePlay extends Phaser.Scene
         this.load.image("sprAsteroid", "resources/asteroid.png");
         this.load.image("sprBattery", "resources/battery.png");
         this.load.image("sprPlusFuel", "resources/plus_fuel.png");
-        this.load.image("sprPlayer", "resources/SpaceShipWFire.png");
+        this.load.spritesheet("sprPlayer", "resources/shipAnimated.png", {
+            frameWidth: 32,
+            frameHeight: 32
+        });
         this.load.spritesheet("explosionAnim", "resources/Explosion.png", {
             frameWidth: 100,
             frameHeight: 100
@@ -53,6 +56,12 @@ class ScenePlay extends Phaser.Scene
 
     create()
     {
+        this.anims.create({
+            key: "sprPlayer",
+            frames: this.anims.generateFrameNumbers("sprPlayer"),
+            frameRate: 10,
+            repeat: -1
+        });
         this.anims.create({
             key: "explosionAnim",
             frames: this.anims.generateFrameNumbers("explosionAnim"),
@@ -345,7 +354,7 @@ class ScenePlay extends Phaser.Scene
                             delay: 4000,
                             callback: function ()
                             {
-                                this.planet.scale *= 2;
+                                this.planet.scale *= 10;
                                 this.planet.explode(false);
                                 //this.player.explode(false);
                                 this.planet.on('animationcomplete', function ()
