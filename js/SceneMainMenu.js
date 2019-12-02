@@ -89,7 +89,7 @@ class SceneMainMenu extends Phaser.Scene
                 });
             }
             //TODO Not on options click
-            this.scene.start("SceneInstruction");
+            this.scene.start("ScenePlay");
         }, this);
         this.scale.on('resize', this.resize, this);
         let gameWidth = this.cameras.main.width;
