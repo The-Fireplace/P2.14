@@ -19,7 +19,10 @@ class Entity extends Phaser.GameObjects.Sprite
             this.setTexture("explosionAnim");  // this refers to the same animation key we used when we added this.anims.create previously
             this.play("explosionAnim", true, 2); // play the animation
             //Scale up because the explosion texture is smol
-            this.scale *= 5;
+            if (canDestroy)
+            {
+                this.scale *= 5;
+            }
 
             this.scene.sndExplosion.play();
 
@@ -87,6 +90,7 @@ class Player extends Entity
         super(scene, x, y, key, "Player");
         this.setData("speed", 200);
         this.setTexture("sprPlayer");
+        this.play("sprPlayer");
         this.fuel = 100;
     }
 

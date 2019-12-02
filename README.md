@@ -40,6 +40,8 @@
 
 - [Demo Link](https://the-fireplace.github.io/P2.14/demo.html)
 
+![QR](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/demo_qr.png)
+
 - Fly through space to reach the end goal without crashing.
 
 - Hypothesis: 
