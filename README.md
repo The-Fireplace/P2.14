@@ -38,6 +38,8 @@
 
 ### Game and Task description
 
+![Demo Gif](resources/P2Final.14.gif)
+
 - [Demo Link](https://the-fireplace.github.io/P2.14/demo.html)
 
 ![QR](https://raw.githubusercontent.com/The-Fireplace/P2.14/master/resources/demo_qr.png)
