@@ -326,7 +326,7 @@ class ScenePlay extends Phaser.Scene
         });
 
         //Planet spawning timer
-        let gameTime = 90000 + Phaser.Math.Between(0, 120)*1000;
+        let gameTime = 90000 + Phaser.Math.Between(0, 60)*1000;
         this.time.addEvent({
             //3 minutes before planet spawn
             delay: gameTime,
