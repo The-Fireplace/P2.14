@@ -326,7 +326,7 @@ class ScenePlay extends Phaser.Scene
         });
 
         //Planet spawning timer
-        let gameTime = 90000 + Phaser.Math.Between(0, 60)*1000;
+        let gameTime = 60000 + Phaser.Math.Between(0, 60)*1000;
         this.time.addEvent({
             //3 minutes before planet spawn
             delay: gameTime,
@@ -478,6 +478,9 @@ class ScenePlay extends Phaser.Scene
     {
         if (this.player.fuel > 50)
         {
+            this.shieldUseable.visible = false;
+            this.shieldNotUse.visible = false;
+            this.shieldInUse.visible = true;
             //Activate forcefield
             this.player.fuel -= 50;
             this.ff = new ForceField(this, this.player.x, this.player.y);
